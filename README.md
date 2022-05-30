@@ -11,8 +11,9 @@ Ainda está em desenvolvimento, mas o prazo de finalização é 4 de Maio.
 O projeto tem a estrutura do Clean Architeture, com 4 camadas de abstração (Presenter, Domain, Infra, External). Todas as camadas são feitas utilizando testes unitários.
 
 ## A fazer
-
-- [x] Consumir Api
+ 
+- [x] Criar biblioteca dart para pesquisar encomendas do correios
+- [x] Consumir Api [link](https://pub.dev/packages/correios_rastreio)
 - [x] Verificação formato do código (Regex)
 - [x] Tela Home
 - [x] Tela Detalhes
