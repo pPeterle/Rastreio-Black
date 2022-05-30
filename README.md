@@ -1,16 +1,23 @@
-# rastrear_encomenda_sem_anuncio
+# Rastreio No Ads
 
-A new Flutter project.
+Projeto em Flutter para rastreio de encomendas nos correios, totalmente free e sem anúncios
 
-## Getting Started
+## Playstore
 
-This project is a starting point for a Flutter application.
+Ainda está em desenvolvimento, mas o prazo de finalização é 4 de Maio.
 
-A few resources to get you started if this is your first Flutter project:
+## Estrutura
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+O projeto tem a estrutura do Clean Architeture, com 4 camadas de abstração (Presenter, Domain, Infra, External). Todas as camadas são feitas utilizando testes unitários.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## A fazer
+
+- [x] Consumir Api
+- [x] Verificação formato do código (Regex)
+- [x] Tela Home
+- [x] Tela Detalhes
+- [x] Testes Infra, External e Domain
+- [x] Dark Mode
+- [ ] Adicionar Animação de Loading customizada (Lottie)
+- [ ] Enviar Notificação
+- [ ] Adicionar testes na camada presenter
