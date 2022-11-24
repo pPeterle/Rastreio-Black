@@ -18,7 +18,7 @@ class DeliveryModelAdapter extends TypeAdapter<DeliveryModel> {
     };
     return DeliveryModel(
       code: fields[1] as String,
-      events: (fields[3] as List).cast<DeliveryEventsModel>(),
+      events: (fields[3] as List).cast<DeliveryEventModel>(),
       title: fields[2] as String?,
     );
   }

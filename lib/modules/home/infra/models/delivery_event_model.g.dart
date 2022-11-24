@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'delivery_events_model.dart';
+part of 'delivery_event_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class DeliveryEventsModelAdapter extends TypeAdapter<DeliveryEventsModel> {
+class DeliveryEventsModelAdapter extends TypeAdapter<DeliveryEventModel> {
   @override
   final int typeId = 1;
 
   @override
-  DeliveryEventsModel read(BinaryReader reader) {
+  DeliveryEventModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return DeliveryEventsModel(
+    return DeliveryEventModel(
       status: fields[0] as String,
       data: fields[1] as String,
       hora: fields[2] as String,
@@ -27,7 +27,7 @@ class DeliveryEventsModelAdapter extends TypeAdapter<DeliveryEventsModel> {
   }
 
   @override
-  void write(BinaryWriter writer, DeliveryEventsModel obj) {
+  void write(BinaryWriter writer, DeliveryEventModel obj) {
     writer
       ..writeByte(6)
       ..writeByte(0)

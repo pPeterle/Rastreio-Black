@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/add_delivery/add_delivery_bloc.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/add_delivery/events/add_delivery_events.dart';
+import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/add_delivery/states/add_delivery_states.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/edit_delivery/edit_delivery_bloc.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/edit_delivery/states/edit_delivery_states.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-class AddDeliveryBottomSheetWidget extends StatefulWidget {
-  const AddDeliveryBottomSheetWidget({Key? key}) : super(key: key);
+import 'events/edit_delivery_events.dart';
+
+class EditDeliveryBottomSheetWidget extends StatefulWidget {
+  final Delivery delivery;
+  const EditDeliveryBottomSheetWidget({Key? key, required this.delivery})
+      : super(key: key);
 
   @override
-  State<AddDeliveryBottomSheetWidget> createState() =>
-      _AddDeliveryBottomSheetWidgetState();
+  State<EditDeliveryBottomSheetWidget> createState() =>
+      _EditDeliveryBottomSheetWidgetState();
 }
 
-class _AddDeliveryBottomSheetWidgetState
-    extends State<AddDeliveryBottomSheetWidget> {
-  final AddDeliveryBloc bloc = Modular.get();
+class _EditDeliveryBottomSheetWidgetState
+    extends State<EditDeliveryBottomSheetWidget> {
+  final EditDeliveryBloc bloc = Modular.get();
   final TextEditingController _codeTextEditingController =
       TextEditingController();
   final TextEditingController _titleTextEditingController =
@@ -25,8 +29,11 @@ class _AddDeliveryBottomSheetWidgetState
   void initState() {
     super.initState();
 
+    _codeTextEditingController.text = widget.delivery.code;
+    _titleTextEditingController.text = widget.delivery.title ?? '';
+
     bloc.stream.listen((event) {
-      if (event is AddDeliveryForm) {
+      if (event is EditDeliveryForm) {
         final code = event.code;
         _codeTextEditingController.text =
             code ?? _codeTextEditingController.text;
@@ -51,7 +58,7 @@ class _AddDeliveryBottomSheetWidgetState
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          StreamBuilder<AddDeliveryStates>(
+          StreamBuilder<EditDeliveryStates>(
             stream: bloc.stream,
             builder: (context, snapshot) {
               String? error;
@@ -62,6 +69,7 @@ class _AddDeliveryBottomSheetWidgetState
                 decoration:
                     InputDecoration(hintText: 'Código', errorText: error),
                 controller: _codeTextEditingController,
+                readOnly: true,
               );
             },
           ),
@@ -74,44 +82,6 @@ class _AddDeliveryBottomSheetWidgetState
           const SizedBox(height: 10),
           Row(
             children: [
-              Tooltip(
-                message: 'Adicionar título',
-                child: Material(
-                  child: InkWell(
-                    child: SizedBox(
-                      width: 40,
-                      height: 40,
-                      child: Icon(
-                        Icons.short_text,
-                        size: 30,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                    ),
-                    onTap: () {},
-                  ),
-                ),
-              ),
-              Tooltip(
-                message: 'Colar código',
-                child: Material(
-                  child: InkWell(
-                    child: SizedBox(
-                      width: 40,
-                      height: 40,
-                      child: Icon(
-                        Icons.paste_outlined,
-                        size: 20,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                    ),
-                    onTap: () async {
-                      final clipbaord =
-                          await Clipboard.getData(Clipboard.kTextPlain);
-                      bloc.add(PasteCodeClipboard(clipbaord?.text));
-                    },
-                  ),
-                ),
-              ),
               const Spacer(),
               TextButton(onPressed: _saveDelivery, child: const Text('Salvar'))
             ],
@@ -123,7 +93,7 @@ class _AddDeliveryBottomSheetWidgetState
 
   void _saveDelivery() {
     bloc.add(
-      SaveDelivery(
+      SaveEditDelivery(
         code: _codeTextEditingController.text,
         title: _titleTextEditingController.text,
       ),

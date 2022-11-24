@@ -1,6 +1,6 @@
 import 'package:correios_rastreio/correios_rastreio.dart';
 import 'package:flutter_clean_architeture/modules/home/infra/datasource/remote_delivery_datasource.dart';
-import 'package:flutter_clean_architeture/modules/home/infra/models/delivery_events_model.dart';
+import 'package:flutter_clean_architeture/modules/home/infra/models/delivery_event_model.dart';
 import 'package:flutter_clean_architeture/modules/home/infra/models/delivery_model.dart';
 
 class CorreiosRastreioDatasource implements RemoteDeliveryDataSource {
@@ -13,7 +13,7 @@ class CorreiosRastreioDatasource implements RemoteDeliveryDataSource {
     final delivery = await correios.rastrearEncomenda(code);
     final events = delivery.events
         .map(
-          (e) => DeliveryEventsModel(
+          (e) => DeliveryEventModel(
             status: e.status,
             data: e.data,
             hora: e.hora,

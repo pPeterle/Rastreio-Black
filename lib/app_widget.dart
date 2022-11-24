@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       routeInformationParser: Modular.routeInformationParser,
       routerDelegate: Modular.routerDelegate,
-      title: 'Flutter Demo',
+      title: 'Rastreio No Ads',
       theme: ThemeData(
         useMaterial3: true,
         //colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff001d3d)),

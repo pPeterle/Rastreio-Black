@@ -1,10 +1,10 @@
-import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery_events.dart';
+import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery_event.dart';
 import 'package:hive/hive.dart';
 
-part 'delivery_events_model.g.dart';
+part 'delivery_event_model.g.dart';
 
 @HiveType(typeId: 1)
-class DeliveryEventsModel {
+class DeliveryEventModel {
   @HiveField(0)
   final String status;
   @HiveField(1)
@@ -18,7 +18,7 @@ class DeliveryEventsModel {
   @HiveField(5)
   final String? local;
 
-  const DeliveryEventsModel({
+  const DeliveryEventModel({
     required this.status,
     required this.data,
     required this.hora,
@@ -27,7 +27,18 @@ class DeliveryEventsModel {
     this.local,
   });
 
-  DeliveryEvents mapToDomain() => DeliveryEvents(
+  factory DeliveryEventModel.fromDomain(DeliveryEvent event) {
+    return DeliveryEventModel(
+      status: event.status,
+      data: event.data,
+      hora: event.hora,
+      destino: event.destino,
+      local: event.local,
+      origem: event.origem,
+    );
+  }
+
+  DeliveryEvent mapToDomain() => DeliveryEvent(
         data: data,
         hora: hora,
         status: status,

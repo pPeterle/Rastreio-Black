@@ -6,11 +6,10 @@ import 'package:flutter_clean_architeture/modules/home/presenter/home/events/hom
 import 'package:flutter_clean_architeture/modules/home/presenter/home/states/home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvents, HomeState> {
-  final GetAllDelivery getAllDelivery;
+  final GetAllDeliveryUsecase getAllDelivery;
 
   HomeBloc(this.getAllDelivery) : super(HomeStart()) {
     on<GetHomeData>(_getAllDelivery);
-    on<NewDeliveryAdded>(_newDeliveryAdded);
   }
 
   FutureOr<void> _getAllDelivery(
@@ -20,16 +19,5 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
     emit(HomeLoading());
     final result = await getAllDelivery();
     result.fold((l) => HomeError(l), (r) => emit(HomeSuccess(r)));
-  }
-
-  FutureOr<void> _newDeliveryAdded(
-    NewDeliveryAdded event,
-    Emitter<HomeState> emit,
-  ) {
-    if (state is HomeSuccess) {
-      final list = (state as HomeSuccess).list;
-      list.add(event.delivery);
-      emit(HomeSuccess(list));
-    }
   }
 }

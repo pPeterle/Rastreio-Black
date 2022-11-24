@@ -1,4 +1,4 @@
-class DeliveryEvents {
+class DeliveryEvent {
   final String status;
   final String data;
   final String hora;
@@ -6,7 +6,7 @@ class DeliveryEvents {
   final String? destino;
   final String? local;
 
-  const DeliveryEvents({
+  const DeliveryEvent({
     required this.status,
     required this.data,
     required this.hora,

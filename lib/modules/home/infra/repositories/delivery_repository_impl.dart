@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/repositories/track_repository.dart';
 import 'package:flutter_clean_architeture/modules/home/infra/datasource/local_delivery_datasource.dart';
 import 'package:flutter_clean_architeture/modules/home/infra/datasource/remote_delivery_datasource.dart';
+import 'package:flutter_clean_architeture/modules/home/infra/models/delivery_model.dart';
 
 class DeliveryRepositoryImpl implements DeliveryRepository {
   final RemoteDeliveryDataSource _remoteDatasource;
@@ -17,7 +18,6 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
     try {
       final result = await _remoteDatasource.trackDelivery(code);
       final delivery = result.copyWith(title: title);
-      await _localDatasource.saveDeliveryModel(delivery);
       return Right(delivery.mapToDomain());
     } on CodeNotFound {
       return Left(CodeNotFoundError());
@@ -35,6 +35,28 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
           result.map((delivery) => delivery.mapToDomain()).toList(),
         ),
       );
+    } catch (e) {
+      return Future.value(Left(DataSourceError()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Delivery>> saveDelivery(Delivery delivery) async {
+    try {
+      await _localDatasource
+          .saveDeliveryModel(DeliveryModel.fromDromain(delivery));
+      return right(delivery);
+    } catch (e) {
+      return Future.value(Left(DataSourceError()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deleteDelivery(Delivery delivery) async {
+    try {
+      await _localDatasource
+          .deleteDeliveryModel(DeliveryModel.fromDromain(delivery));
+      return right(unit);
     } catch (e) {
       return Future.value(Left(DataSourceError()));
     }

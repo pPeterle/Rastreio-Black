@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/home/events/home_events.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/home/home_bloc.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/home/states/home_state.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/add_delivery/add_delivery_widget.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/edit_delivery/edit_delivery_widget.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class HomePage extends StatefulWidget {
@@ -73,10 +75,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           key: _scaffoldKey,
           appBar: AppBar(
             title: Text(
-              'Rastreio',
+              'Rastreio No Ads',
               style: TextStyle(
-                  color: theme.colorScheme.onBackground,
-                  fontWeight: FontWeight.bold),
+                color: theme.colorScheme.onBackground,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             backgroundColor: theme.colorScheme.background,
           ),
@@ -91,65 +94,73 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               }
               if (snapshot.data is HomeSuccess) {
                 final list = (snapshot.data as HomeSuccess).list;
-                return ListView.builder(
-                  itemCount: list.length,
-                  itemBuilder: (context, index) {
-                    final delivery = list[index];
-                    return Card(
-                      elevation: 0,
-                      margin: const EdgeInsets.symmetric(
-                        vertical: 4,
-                        horizontal: 8,
-                      ),
-                      child: InkWell(
-                        onTap: () {
-                          Modular.to
-                              .pushNamed('/delivery', arguments: delivery);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 8.0,
-                            horizontal: 16,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    delivery.title ?? 'Pc novo',
-                                    style: TextStyle(
-                                      color: theme.colorScheme.secondary,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    return bloc.add(GetHomeData());
+                  },
+                  child: ListView.builder(
+                    itemCount: list.length,
+                    itemBuilder: (context, index) {
+                      final delivery = list[index];
+                      return Card(
+                        elevation: 0,
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 4,
+                          horizontal: 8,
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            Modular.to
+                                .pushNamed('/delivery', arguments: delivery);
+                          },
+                          onDoubleTap: () {
+                            showOptionsDelivery(context, delivery);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 8.0,
+                              horizontal: 16,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      delivery.title ?? delivery.code,
+                                      style: TextStyle(
+                                        color: theme.colorScheme.secondary,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    "${delivery.events[0].data} ${delivery.events[0].hora}",
-                                    style: theme.textTheme.bodySmall,
-                                  )
-                                ],
-                              ),
-                              Text(
-                                delivery.events[0].status,
-                                style: theme.textTheme.bodyMedium,
-                              ),
-                              if (delivery.events[0].local != null)
+                                    const Spacer(),
+                                    Text(
+                                      "${delivery.events[0].data} ${delivery.events[0].hora}",
+                                      style: theme.textTheme.bodySmall,
+                                    )
+                                  ],
+                                ),
                                 Text(
-                                  delivery.events[0].local ?? "",
+                                  delivery.events[0].status,
+                                  style: theme.textTheme.bodyMedium,
+                                ),
+                                if (delivery.events[0].local != null)
+                                  Text(
+                                    delivery.events[0].local ?? "",
+                                    style: theme.textTheme.bodySmall,
+                                  ),
+                                Text(
+                                  delivery.code,
                                   style: theme.textTheme.bodySmall,
                                 ),
-                              Text(
-                                delivery.code,
-                                style: theme.textTheme.bodySmall,
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 );
               } else {
                 return Container();
@@ -201,7 +212,45 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     showModalBottomSheet(
       context: context,
       transitionAnimationController: _animationBottomSheetController,
-      builder: (context) => const AddDeliveryBottomSheetWidget(),
+      isScrollControlled: true,
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: const AddDeliveryBottomSheetWidget(),
+      ),
+    );
+  }
+
+  void showOptionsDelivery(BuildContext context, Delivery delivery) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            title: const Text('Editar'),
+            onTap: () => editTrackDeliveryBottomSheet(delivery),
+          ),
+          const ListTile(
+            title: Text('Excluir'),
+          )
+        ],
+      ),
+    );
+  }
+
+  void editTrackDeliveryBottomSheet(Delivery delivery) {
+    showModalBottomSheet(
+      context: context,
+      transitionAnimationController: _animationBottomSheetController,
+      isScrollControlled: true,
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: EditDeliveryBottomSheetWidget(delivery: delivery),
+      ),
     );
   }
 

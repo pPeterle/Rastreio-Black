@@ -3,14 +3,14 @@ import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery.
 import 'package:flutter_clean_architeture/modules/home/domain/errors/errors.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/repositories/track_repository.dart';
 
-abstract class GetAllDelivery {
+abstract class GetAllDeliveryUsecase {
   Future<Either<Failure, List<Delivery>>> call();
 }
 
-class GetAllDeliveryImpl implements GetAllDelivery {
+class GetAllDeliveryUsecaseImpl implements GetAllDeliveryUsecase {
   final DeliveryRepository _deliveryRepository;
 
-  GetAllDeliveryImpl(this._deliveryRepository);
+  GetAllDeliveryUsecaseImpl(this._deliveryRepository);
 
   @override
   Future<Either<Failure, List<Delivery>>> call() {

@@ -18,7 +18,7 @@ class HiveDatasource implements LocalDeliveryDatasource, Disposable {
 
   @override
   Future saveDeliveryModel(DeliveryModel deliveryModel) =>
-      _box.add(deliveryModel);
+      _box.put(deliveryModel.code, deliveryModel);
 
   @override
   List<DeliveryModel> getAllDeliveryModels() => _box.values.toList();
@@ -26,5 +26,10 @@ class HiveDatasource implements LocalDeliveryDatasource, Disposable {
   @override
   void dispose() {
     _box.close();
+  }
+
+  @override
+  Future<void> deleteDeliveryModel(DeliveryModel deliveryModel) {
+    return _box.delete(deliveryModel.code);
   }
 }

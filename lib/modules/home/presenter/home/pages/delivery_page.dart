@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
-class DeliveryPage extends StatelessWidget {
+import '../widgets/edit_delivery/edit_delivery_widget.dart';
+
+class DeliveryPage extends StatefulWidget {
   final Delivery delivery;
 
   const DeliveryPage({Key? key, required this.delivery}) : super(key: key);
+
+  @override
+  State<DeliveryPage> createState() => _DeliveryPageState();
+}
+
+class _DeliveryPageState extends State<DeliveryPage> {
+  late Delivery delivery;
+
+  @override
+  void initState() {
+    super.initState();
+    delivery = widget.delivery;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +34,17 @@ class DeliveryPage extends StatelessWidget {
         backgroundColor: theme.colorScheme.background,
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.more_vert,
-            ),
-          )
+            onPressed: () {
+              openEditBottomSheet(context);
+            },
+            icon: const Icon(Icons.edit),
+          ),
+          IconButton(
+            onPressed: () {
+              openDeleteModal(context);
+            },
+            icon: const Icon(Icons.delete),
+          ),
         ],
       ),
       backgroundColor: theme.colorScheme.background,
@@ -128,6 +150,48 @@ class DeliveryPage extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  void openEditBottomSheet(BuildContext context) async {
+    final updatedDelivery = await showModalBottomSheet<Delivery>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: EditDeliveryBottomSheetWidget(delivery: delivery),
+      ),
+    );
+
+    if (updatedDelivery == null) return;
+
+    setState(() {
+      delivery = updatedDelivery;
+    });
+  }
+
+  void openDeleteModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Deseja excluir esta encomenda?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Modular.to.pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {},
+              child: const Text('Excluir'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

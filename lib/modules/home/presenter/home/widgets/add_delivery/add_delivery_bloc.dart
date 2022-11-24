@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/errors/errors.dart';
-import 'package:flutter_clean_architeture/modules/home/domain/usecases/track_deliviery.dart';
+import 'package:flutter_clean_architeture/modules/home/domain/usecases/save_deliviery.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/home/events/home_events.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/home/home_bloc.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/add_delivery/events/add_delivery_events.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/add_delivery/states/add_delivery_states.dart';
 
 class AddDeliveryBloc extends Bloc<AddDeliveryEvents, AddDeliveryStates> {
-  final RastrearEncomenda rastrearEncomenda;
+  final SaveDeliveryUsecase rastrearEncomenda;
   final HomeBloc _homeBloc;
 
   AddDeliveryBloc(this.rastrearEncomenda, this._homeBloc)
@@ -40,7 +40,7 @@ class AddDeliveryBloc extends Bloc<AddDeliveryEvents, AddDeliveryStates> {
           emit(AddDeliveryError(codeError: 'Código incorreto'));
         }
       },
-      (r) => _homeBloc.add(NewDeliveryAdded(r)),
+      (r) => _homeBloc.add(GetHomeData()),
     );
   }
 
