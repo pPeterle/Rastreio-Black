@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/errors/errors.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/usecases/save_deliviery.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/events/home_events.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/home_bloc.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/add_delivery/events/add_delivery_events.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/add_delivery/states/add_delivery_states.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/widgets/add_delivery/states/add_delivery_states.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+
+import '../../events/home_events.dart';
+import '../../home_bloc.dart';
+import 'events/add_delivery_events.dart';
 
 class AddDeliveryBloc extends Bloc<AddDeliveryEvents, AddDeliveryStates> {
   final SaveDeliveryUsecase rastrearEncomenda;
@@ -27,21 +29,25 @@ class AddDeliveryBloc extends Bloc<AddDeliveryEvents, AddDeliveryStates> {
   }
 
   saveDelivery(SaveDelivery event, Emitter<AddDeliveryStates> emit) async {
+    emit(AddDeliveryLoading());
     final result = await rastrearEncomenda(event.code, title: event.title);
-    result.fold(
+    final newState = result.fold(
       (fail) {
-        if (fail is DataSourceError) {
-          emit(
-            AddDeliveryError(
-              genericError: 'Algum erro aconteceu ao buscar os dados',
-            ),
-          );
-        } else if (fail is CodeNotFoundError || fail is InvalidTextError) {
-          emit(AddDeliveryError(codeError: 'Código incorreto'));
+        if (fail is CodeNotFoundError || fail is InvalidTextError) {
+          return AddDeliveryError(codeError: 'Código incorreto');
         }
+
+        return AddDeliveryError(
+          genericError: 'Algum erro aconteceu ao buscar os dados',
+        );
       },
-      (r) => _homeBloc.add(GetHomeData()),
+      (r) {
+        _homeBloc.add(GetHomeDataEvent());
+        Modular.to.pop();
+        return AddDeliveryBaseState(canSaveDelivery: true);
+      },
     );
+    emit(newState);
   }
 
   FutureOr<void> _pasteCodeClipboard(

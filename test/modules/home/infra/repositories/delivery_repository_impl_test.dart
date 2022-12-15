@@ -19,7 +19,7 @@ void main() {
   final repository = DeliveryRepositoryImpl(remoteDatasource, localDatasource);
 
   test('deve retornar um Delivery em caso de sucesso', () async {
-    final delivery = DeliveryModel(code: 'ab', events: []);
+    final delivery = DeliveryModel(code: 'ab', events: [], title: "");
     when(() => remoteDatasource.trackDelivery(any()))
         .thenAnswer((invocation) async => delivery);
     when(() => localDatasource.saveDeliveryModel(delivery))
@@ -52,7 +52,7 @@ void main() {
   });
 
   test('deve retornar o objeto salvo no banco local', () async {
-    final delivery = DeliveryModel(code: 'ab', events: []);
+    final delivery = DeliveryModel(code: 'ab', events: [], title: "");
     when(() => localDatasource.getAllDeliveryModels()).thenReturn([delivery]);
 
     final result = await repository.getAllDeliveries();
@@ -63,7 +63,7 @@ void main() {
   test(
       'deve retornar um DataSourceError em caso de erro generico quando buscar do banco',
       () async {
-    final delivery = DeliveryModel(code: 'ab', events: []);
+    final delivery = DeliveryModel(code: 'ab', events: [], title: "");
     when(() => localDatasource.getAllDeliveryModels()).thenThrow(Exception());
 
     final result = await repository.getAllDeliveries();

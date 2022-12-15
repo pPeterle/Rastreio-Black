@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/add_delivery/add_delivery_bloc.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/add_delivery/events/add_delivery_events.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/add_delivery/states/add_delivery_states.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/widgets/add_delivery/states/add_delivery_states.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+
+import 'add_delivery_bloc.dart';
+import 'events/add_delivery_events.dart';
 
 class AddDeliveryBottomSheetWidget extends StatefulWidget {
   const AddDeliveryBottomSheetWidget({Key? key}) : super(key: key);
@@ -113,7 +114,18 @@ class _AddDeliveryBottomSheetWidgetState
                 ),
               ),
               const Spacer(),
-              TextButton(onPressed: _saveDelivery, child: const Text('Salvar'))
+              StreamBuilder<AddDeliveryStates>(
+                stream: bloc.stream,
+                builder: (context, snapshot) {
+                  if (snapshot.data is AddDeliveryLoading) {
+                    return const CircularProgressIndicator();
+                  }
+                  return TextButton(
+                    onPressed: _saveDelivery,
+                    child: const Text('Salvar'),
+                  );
+                },
+              )
             ],
           )
         ],

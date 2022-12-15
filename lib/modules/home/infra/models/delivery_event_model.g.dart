@@ -6,7 +6,7 @@ part of 'delivery_event_model.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class DeliveryEventsModelAdapter extends TypeAdapter<DeliveryEventModel> {
+class DeliveryEventModelAdapter extends TypeAdapter<DeliveryEventModel> {
   @override
   final int typeId = 1;
 
@@ -50,7 +50,7 @@ class DeliveryEventsModelAdapter extends TypeAdapter<DeliveryEventModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is DeliveryEventsModelAdapter &&
+      other is DeliveryEventModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

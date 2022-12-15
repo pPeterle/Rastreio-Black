@@ -23,6 +23,6 @@ class CorreiosRastreioDatasource implements RemoteDeliveryDataSource {
           ),
         )
         .toList();
-    return DeliveryModel(code: delivery.code, events: events);
+    return DeliveryModel(code: delivery.code, events: events, title: "");
   }
 }

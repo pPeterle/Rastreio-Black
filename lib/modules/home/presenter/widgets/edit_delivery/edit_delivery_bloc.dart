@@ -1,11 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/errors/errors.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/usecases/save_deliviery.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/events/home_events.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/home_bloc.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/edit_delivery/events/edit_delivery_events.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/edit_delivery/states/edit_delivery_states.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/widgets/edit_delivery/states/edit_delivery_states.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+
+import '../../events/home_events.dart';
+import '../../home_bloc.dart';
+import 'events/edit_delivery_events.dart';
 
 class EditDeliveryBloc extends Bloc<EditDeliveryEvents, EditDeliveryStates> {
   final SaveDeliveryUsecase rastrearEncomenda;
@@ -40,7 +41,7 @@ class EditDeliveryBloc extends Bloc<EditDeliveryEvents, EditDeliveryStates> {
         }
       },
       (r) {
-        _homeBloc.add(GetHomeData());
+        _homeBloc.add(GetHomeDataEvent());
         Modular.to.pop(r);
       },
     );

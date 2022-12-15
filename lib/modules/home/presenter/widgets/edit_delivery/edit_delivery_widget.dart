@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/add_delivery/states/add_delivery_states.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/edit_delivery/edit_delivery_bloc.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/edit_delivery/states/edit_delivery_states.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/widgets/edit_delivery/states/edit_delivery_states.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
+import '../add_delivery/states/add_delivery_states.dart';
+import 'edit_delivery_bloc.dart';
 import 'events/edit_delivery_events.dart';
 
 class EditDeliveryBottomSheetWidget extends StatefulWidget {
@@ -30,7 +30,7 @@ class _EditDeliveryBottomSheetWidgetState
     super.initState();
 
     _codeTextEditingController.text = widget.delivery.code;
-    _titleTextEditingController.text = widget.delivery.title ?? '';
+    _titleTextEditingController.text = widget.delivery.title;
 
     bloc.stream.listen((event) {
       if (event is EditDeliveryForm) {
@@ -77,6 +77,7 @@ class _EditDeliveryBottomSheetWidgetState
           TextField(
             decoration: const InputDecoration.collapsed(hintText: 'Nome'),
             controller: _titleTextEditingController,
+            autofocus: true,
             style: const TextStyle(fontSize: 14),
           ),
           const SizedBox(height: 10),

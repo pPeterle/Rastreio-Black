@@ -1,11 +1,13 @@
+import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/events/home_events.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/home_bloc.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/states/home_state.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/add_delivery/add_delivery_widget.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home/widgets/edit_delivery/edit_delivery_widget.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/widgets/add_delivery/add_delivery_widget.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/widgets/edit_delivery/edit_delivery_widget.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+
+import 'events/home_events.dart';
+import 'home_bloc.dart';
+import 'states/home_state.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -25,7 +27,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    bloc.add(GetHomeData());
+    initPlatformState();
+
+    bloc.add(GetHomeDataEvent());
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -96,7 +100,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 final list = (snapshot.data as HomeSuccess).list;
                 return RefreshIndicator(
                   onRefresh: () async {
-                    return bloc.add(GetHomeData());
+                    return bloc.add(UpdateDeliveriesEvent());
                   },
                   child: ListView.builder(
                     itemCount: list.length,
@@ -113,9 +117,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             Modular.to
                                 .pushNamed('/delivery', arguments: delivery);
                           },
-                          onDoubleTap: () {
-                            showOptionsDelivery(context, delivery);
-                          },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
                               vertical: 8.0,
@@ -127,7 +128,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 Row(
                                   children: [
                                     Text(
-                                      delivery.title ?? delivery.code,
+                                      delivery.title.isEmpty
+                                          ? delivery.code
+                                          : delivery.title,
                                       style: TextStyle(
                                         color: theme.colorScheme.secondary,
                                         fontSize: 16,
@@ -208,7 +211,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  void showTrackDeliveryBottomSheet() {
+  void showTrackDeliveryBottomSheet() async {
     showModalBottomSheet(
       context: context,
       transitionAnimationController: _animationBottomSheetController,
@@ -218,24 +221,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
         child: const AddDeliveryBottomSheetWidget(),
-      ),
-    );
-  }
-
-  void showOptionsDelivery(BuildContext context, Delivery delivery) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            title: const Text('Editar'),
-            onTap: () => editTrackDeliveryBottomSheet(delivery),
-          ),
-          const ListTile(
-            title: Text('Excluir'),
-          )
-        ],
       ),
     );
   }
@@ -271,5 +256,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     }
 
     return showFab;
+  }
+
+  void initPlatformState() {
+    BackgroundFetch.configure(
+        BackgroundFetchConfig(
+          minimumFetchInterval: 15,
+          startOnBoot: true,
+          stopOnTerminate: false,
+          enableHeadless: true,
+          requiresBatteryNotLow: false,
+          requiresCharging: false,
+          requiresStorageNotLow: false,
+          requiresDeviceIdle: false,
+          requiredNetworkType: NetworkType.NONE,
+        ), (String taskId) async {
+      BackgroundFetch.finish(taskId);
+    }, (String taskId) {
+      BackgroundFetch.finish(taskId);
+    });
   }
 }

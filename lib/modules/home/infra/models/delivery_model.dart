@@ -9,11 +9,15 @@ class DeliveryModel extends HiveObject {
   @HiveField(1)
   final String code;
   @HiveField(2)
-  final String? title;
+  final String title;
   @HiveField(3)
   final List<DeliveryEventModel> events;
 
-  DeliveryModel({required this.code, required this.events, this.title});
+  DeliveryModel({
+    required this.code,
+    required this.events,
+    required this.title,
+  });
 
   factory DeliveryModel.fromDromain(
     Delivery delivery,

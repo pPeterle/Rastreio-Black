@@ -27,16 +27,14 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
   }
 
   @override
-  Future<Either<Failure, List<Delivery>>> getAllDeliveries() {
+  Future<Either<Failure, List<Delivery>>> getAllDeliveries() async {
     try {
       final result = _localDatasource.getAllDeliveryModels();
-      return Future.value(
-        Right(
-          result.map((delivery) => delivery.mapToDomain()).toList(),
-        ),
+      return Right(
+        result.map((delivery) => delivery.mapToDomain()).toList(),
       );
     } catch (e) {
-      return Future.value(Left(DataSourceError()));
+      return Left(DataSourceError());
     }
   }
 
@@ -59,6 +57,31 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
       return right(unit);
     } catch (e) {
       return Future.value(Left(DataSourceError()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Delivery>>> updateDeliveries() async {
+    try {
+      final deliveries = _localDatasource.getAllDeliveryModels();
+
+      final updateDeliveriesFuture = deliveries.map((delivery) async {
+        final updateDelivery =
+            await _remoteDatasource.trackDelivery(delivery.code);
+        return updateDelivery.copyWith(title: delivery.title);
+      });
+      final updateDeliveries = await Future.wait(updateDeliveriesFuture);
+
+      await Future.wait(
+        updateDeliveries
+            .map((delivery) => _localDatasource.saveDeliveryModel(delivery)),
+      );
+
+      return Right(
+        updateDeliveries.map((delivery) => delivery.mapToDomain()).toList(),
+      );
+    } catch (e) {
+      return Left(DataSourceError());
     }
   }
 }

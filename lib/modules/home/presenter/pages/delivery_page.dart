@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/events/home_events.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/home_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../widgets/edit_delivery/edit_delivery_widget.dart';
@@ -14,6 +16,7 @@ class DeliveryPage extends StatefulWidget {
 }
 
 class _DeliveryPageState extends State<DeliveryPage> {
+  final HomeBloc homeBloc = Modular.get();
   late Delivery delivery;
 
   @override
@@ -28,7 +31,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          delivery.title ?? delivery.code,
+          delivery.title.isEmpty ? delivery.code : delivery.title,
           style: theme.textTheme.titleLarge,
         ),
         backgroundColor: theme.colorScheme.background,
@@ -186,7 +189,10 @@ class _DeliveryPageState extends State<DeliveryPage> {
               child: const Text('Cancelar'),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                homeBloc.add(DeleteDeliveryEvent(delivery));
+                Modular.to.popUntil(ModalRoute.withName('/home'));
+              },
               child: const Text('Excluir'),
             ),
           ],

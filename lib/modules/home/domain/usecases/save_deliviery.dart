@@ -5,7 +5,7 @@ import 'package:flutter_clean_architeture/modules/home/domain/repositories/track
 import 'package:flutter_clean_architeture/modules/home/domain/util/delivery_code_validator.dart';
 
 abstract class SaveDeliveryUsecase {
-  Future<Either<Failure, Delivery>> call(String code, {String title});
+  Future<Either<Failure, Delivery>> call(String code, {String? title});
 }
 
 class SaveDeliveryUsecaseImpl
@@ -22,7 +22,6 @@ class SaveDeliveryUsecaseImpl
     }
 
     final track = await repository.track(code, title: title);
-
     return track.fold((l) => left(l), (r) => repository.saveDelivery(r));
   }
 }
