@@ -29,7 +29,7 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
   @override
   Future<Either<Failure, List<Delivery>>> getAllDeliveries() async {
     try {
-      final result = _localDatasource.getAllDeliveryModels();
+      final result = await _localDatasource.getAllDeliveryModels();
       return Right(
         result.map((delivery) => delivery.mapToDomain()).toList(),
       );
@@ -63,7 +63,7 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
   @override
   Future<Either<Failure, List<Delivery>>> updateDeliveries() async {
     try {
-      final deliveries = _localDatasource.getAllDeliveryModels();
+      final deliveries = await _localDatasource.getAllDeliveryModels();
 
       final updateDeliveriesFuture = deliveries.map((delivery) async {
         final updateDelivery =

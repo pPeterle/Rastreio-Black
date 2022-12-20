@@ -4,5 +4,5 @@ abstract class LocalDeliveryDatasource {
   Future<void> saveDeliveryModel(DeliveryModel deliveryModel);
   Future<void> deleteDeliveryModel(DeliveryModel deliveryModel);
 
-  List<DeliveryModel> getAllDeliveryModels();
+  Future<List<DeliveryModel>> getAllDeliveryModels();
 }

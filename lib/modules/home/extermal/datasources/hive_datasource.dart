@@ -3,33 +3,45 @@ import 'package:flutter_clean_architeture/modules/home/infra/models/delivery_mod
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../../infra/models/delivery_event_model.dart';
+
 class HiveDatasource implements LocalDeliveryDatasource, Disposable {
   static const deliveryBoxKey = 'DeliveryBoxKey';
 
-  late final Box<DeliveryModel> _box;
+  late final Future<Box<DeliveryModel>> _box;
 
   HiveDatasource() {
-    open();
+    _configure();
   }
 
-  open() async {
-    _box = Hive.box<DeliveryModel>(deliveryBoxKey);
-  }
-
-  @override
-  Future saveDeliveryModel(DeliveryModel deliveryModel) =>
-      _box.put(deliveryModel.code, deliveryModel);
-
-  @override
-  List<DeliveryModel> getAllDeliveryModels() => _box.values.toList();
-
-  @override
-  void dispose() {
-    _box.close();
+  Future<void> _configure() async {
+    await Hive.initFlutter();
+    Hive.registerAdapter(DeliveryEventModelAdapter());
+    Hive.registerAdapter(DeliveryModelAdapter());
+    _box = Hive.openBox<DeliveryModel>(HiveDatasource.deliveryBoxKey);
   }
 
   @override
-  Future<void> deleteDeliveryModel(DeliveryModel deliveryModel) {
-    return _box.delete(deliveryModel.code);
+  Future<void> saveDeliveryModel(DeliveryModel deliveryModel) async {
+    final box = await _box;
+    box.put(deliveryModel.code, deliveryModel);
+  }
+
+  @override
+  Future<List<DeliveryModel>> getAllDeliveryModels() async {
+    final box = await _box;
+    return box.values.toList();
+  }
+
+  @override
+  void dispose() async {
+    final box = await _box;
+    box.close();
+  }
+
+  @override
+  Future<void> deleteDeliveryModel(DeliveryModel deliveryModel) async {
+    final box = await _box;
+    return box.delete(deliveryModel.code);
   }
 }

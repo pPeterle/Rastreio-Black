@@ -1,21 +1,8 @@
-import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_clean_architeture/modules/home/utils/jobs/fetch_job.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-    BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,22 +29,4 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
-}
-
-@pragma('vm:entry-point')
-void backgroundFetchHeadlessTask(HeadlessTask task) async {
-  print('headless task');
-  String taskId = task.taskId;
-  bool isTimeout = task.timeout;
-  if (isTimeout) {
-    BackgroundFetch.finish(taskId);
-    return;
-  }
-
-  FetchJob job = Modular.get();
-
-  await job.fetchData();
-
-  // Do your work here...
-  BackgroundFetch.finish(taskId);
 }

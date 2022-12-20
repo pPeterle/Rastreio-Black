@@ -53,7 +53,8 @@ void main() {
 
   test('deve retornar o objeto salvo no banco local', () async {
     final delivery = DeliveryModel(code: 'ab', events: [], title: "");
-    when(() => localDatasource.getAllDeliveryModels()).thenReturn([delivery]);
+    when(() => localDatasource.getAllDeliveryModels())
+        .thenAnswer((i) async => [delivery]);
 
     final result = await repository.getAllDeliveries();
 
