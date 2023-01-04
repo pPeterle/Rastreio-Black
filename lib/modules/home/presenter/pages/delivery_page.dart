@@ -110,21 +110,6 @@ class _DeliveryPageState extends State<DeliveryPage> {
                               : theme.textTheme.bodyMedium,
                         ),
                         const SizedBox(height: 4),
-                        if (event.local != null)
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.location_on_outlined,
-                                color: theme.colorScheme.tertiary,
-                              ),
-                              Expanded(
-                                child: Text(
-                                  event.local ?? "",
-                                  style: theme.textTheme.bodySmall,
-                                ),
-                              )
-                            ],
-                          ),
                         if (event.destino != null)
                           Row(
                             children: [
@@ -136,6 +121,21 @@ class _DeliveryPageState extends State<DeliveryPage> {
                               Expanded(
                                 child: Text(
                                   event.destino ?? "",
+                                  style: theme.textTheme.bodySmall,
+                                ),
+                              )
+                            ],
+                          ),
+                        if (event.local != null || event.origem != null)
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.location_on_outlined,
+                                color: theme.colorScheme.tertiary,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  (event.local ?? event.origem) ?? "",
                                   style: theme.textTheme.bodySmall,
                                 ),
                               )

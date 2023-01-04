@@ -4,9 +4,15 @@ import 'package:flutter_clean_architeture/modules/home/domain/errors/errors.dart
 abstract class HomeState {}
 
 class HomeSuccess implements HomeState {
-  final List<Delivery> list;
+  final List<Delivery> deliveries;
+  final List<Delivery> completedDeliveries;
+  final OrderBy orderBy;
 
-  HomeSuccess(this.list);
+  HomeSuccess({
+    required this.deliveries,
+    required this.completedDeliveries,
+    this.orderBy = OrderBy.date,
+  });
 }
 
 class HomeError implements HomeState {
@@ -18,3 +24,5 @@ class HomeError implements HomeState {
 class HomeLoading implements HomeState {}
 
 class HomeStart implements HomeState {}
+
+enum OrderBy { date, title }

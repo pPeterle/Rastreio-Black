@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/widgets/add_delivery/add_delivery_widget.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/widgets/edit_delivery/edit_delivery_widget.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_app_bar.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_bottom_app_bar.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_delivery_card.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_list_widget.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_loading_widget.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import 'events/home_events.dart';
@@ -30,6 +35,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     initPlatformState();
 
     bloc.add(GetHomeDataEvent());
+
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -77,97 +83,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       builder: (context, widget) {
         return Scaffold(
           key: _scaffoldKey,
-          appBar: AppBar(
-            title: Text(
-              'Rastreio No Ads',
-              style: TextStyle(
-                color: theme.colorScheme.onBackground,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            backgroundColor: theme.colorScheme.background,
-          ),
+          appBar: const HomeAppBar(),
           backgroundColor: theme.colorScheme.background,
           body: StreamBuilder<HomeState>(
             stream: bloc.stream,
+            initialData: HomeStart(),
             builder: (context, snapshot) {
-              if (snapshot.data is HomeLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              if (snapshot.data is HomeSuccess) {
-                final list = (snapshot.data as HomeSuccess).list;
-                return RefreshIndicator(
-                  onRefresh: () async {
-                    return bloc.add(UpdateDeliveriesEvent());
-                  },
-                  child: ListView.builder(
-                    itemCount: list.length,
-                    itemBuilder: (context, index) {
-                      final delivery = list[index];
-                      return Card(
-                        elevation: 0,
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 4,
-                          horizontal: 8,
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            Modular.to
-                                .pushNamed('/delivery', arguments: delivery);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 8.0,
-                              horizontal: 16,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      delivery.title.isEmpty
-                                          ? delivery.code
-                                          : delivery.title,
-                                      style: TextStyle(
-                                        color: theme.colorScheme.secondary,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                    Text(
-                                      "${delivery.events[0].data} ${delivery.events[0].hora}",
-                                      style: theme.textTheme.bodySmall,
-                                    )
-                                  ],
-                                ),
-                                Text(
-                                  delivery.events[0].status,
-                                  style: theme.textTheme.bodyMedium,
-                                ),
-                                if (delivery.events[0].local != null)
-                                  Text(
-                                    delivery.events[0].local ?? "",
-                                    style: theme.textTheme.bodySmall,
-                                  ),
-                                Text(
-                                  delivery.code,
-                                  style: theme.textTheme.bodySmall,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                );
-              } else {
-                return Container();
-              }
+              return AnimatedCrossFade(
+                firstChild: const HomeLoadingWidget(),
+                secondChild: HomeListWidget(homeState: snapshot.data!),
+                crossFadeState: snapshot.data is HomeSuccess
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
+                duration: const Duration(milliseconds: 300),
+              );
             },
           ),
           floatingActionButton: _getStartAnimationFab()
@@ -184,27 +113,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: Transform.translate(
             offset: Offset(0, _removeBottomAppBar.value),
-            child: BottomAppBar(
-              color: theme.colorScheme.surface,
-              shape: const AutomaticNotchedShape(
-                RoundedRectangleBorder(),
-                CircleBorder(),
-              ),
-              notchMargin: 6,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.rotate_90_degrees_cw_sharp),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.more_horiz),
-                  )
-                ],
-              ),
-            ),
+            child: const HomeBottomAppBar(),
           ),
         );
       },

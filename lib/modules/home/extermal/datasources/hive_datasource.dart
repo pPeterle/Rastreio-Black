@@ -7,18 +7,18 @@ import '../../infra/models/delivery_event_model.dart';
 
 class HiveDatasource implements LocalDeliveryDatasource, Disposable {
   static const deliveryBoxKey = 'DeliveryBoxKey';
-
   late final Future<Box<DeliveryModel>> _box;
 
   HiveDatasource() {
-    _configure();
+    _box = _configure();
   }
 
-  Future<void> _configure() async {
+  Future<Box<DeliveryModel>> _configure() async {
     await Hive.initFlutter();
+
     Hive.registerAdapter(DeliveryEventModelAdapter());
     Hive.registerAdapter(DeliveryModelAdapter());
-    _box = Hive.openBox<DeliveryModel>(HiveDatasource.deliveryBoxKey);
+    return Hive.openBox<DeliveryModel>(HiveDatasource.deliveryBoxKey);
   }
 
   @override

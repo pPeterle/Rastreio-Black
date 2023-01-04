@@ -21,10 +21,10 @@ class FetchJob {
     this.saveDeliveryUsecase,
     this.notificationService,
   ) {
-    _configure();
+    configure();
   }
 
-  _configure() async {
+  void configure() async {
     BackgroundFetch.configure(
         BackgroundFetchConfig(
           minimumFetchInterval: 15,
@@ -74,6 +74,7 @@ class FetchJob {
       (l) async => {},
       (deliveries) async {
         for (final delivery in deliveries) {
+          if (delivery.isCompleted) return;
           final request = await saveDeliveries(
             delivery.code,
             title: delivery.title,
