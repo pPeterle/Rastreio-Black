@@ -20,13 +20,16 @@ class DeliveryModelAdapter extends TypeAdapter<DeliveryModel> {
       code: fields[1] as String,
       events: (fields[3] as List).cast<DeliveryEventModel>(),
       title: fields[2] as String,
+      deliveryListId: fields[4] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, DeliveryModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
+      ..writeByte(4)
+      ..write(obj.deliveryListId)
       ..writeByte(1)
       ..write(obj.code)
       ..writeByte(2)

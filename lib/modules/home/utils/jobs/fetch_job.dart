@@ -2,14 +2,15 @@ import 'package:background_fetch/background_fetch.dart';
 import 'package:correios_rastreio/correios_rastreio.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/usecases/get_all_deliveries.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/usecases/save_deliviery.dart';
-import 'package:flutter_clean_architeture/modules/home/extermal/datasources/correios_rastreio_datasource.dart';
-import 'package:flutter_clean_architeture/modules/home/extermal/datasources/hive_datasource.dart';
-import 'package:flutter_clean_architeture/modules/home/infra/repositories/delivery_repository_impl.dart';
 import 'package:flutter_clean_architeture/modules/home/utils/services/notification_service.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
+import '../../extermal/datasources/correios_rastreio_datasource.dart';
+import '../../extermal/datasources/hive_datasource.dart';
 import '../../infra/models/delivery_event_model.dart';
 import '../../infra/models/delivery_model.dart';
+import '../../infra/repositories/delivery_repository_impl.dart';
+import '../../infra/repositories/track_repository_impl.dart';
 
 class FetchJob {
   final GetAllDeliveriesUsecase getAllDeliveriesUsecase;
@@ -61,12 +62,17 @@ class FetchJob {
     await Hive.openBox<DeliveryModel>(HiveDatasource.deliveryBoxKey);
 
     final notification = NotificationService();
-    final repository = DeliveryRepositoryImpl(
-      CorreiosRastreioDatasource(CorreiosRastreio()),
-      HiveDatasource(),
+    final remoteDasource = CorreiosRastreioDatasource(CorreiosRastreio());
+    final localDatasource = HiveDatasource();
+    final deliveryRepository = DeliveryRepositoryImpl(
+      remoteDasource,
+      localDatasource,
     );
-    final getDeliveries = GetAllDeliveriesUsecaseImpl(repository);
-    final saveDeliveries = SaveDeliveryUsecaseImpl(repository);
+    final trackRepository = TrackRepositoryImpl(remoteDasource);
+
+    final getDeliveries = GetAllDeliveriesUsecaseImpl(deliveryRepository);
+    final saveDeliveries =
+        SaveDeliveryUsecaseImpl(trackRepository, deliveryRepository);
 
     final localDeliveries = await getDeliveries();
 
@@ -76,8 +82,9 @@ class FetchJob {
         for (final delivery in deliveries) {
           if (delivery.isCompleted) return;
           final request = await saveDeliveries(
-            delivery.code,
+            code: delivery.code,
             title: delivery.title,
+            deliveryListId: delivery.deliveryListId,
           );
           request.fold((l) async => {}, (updatedDelivery) async {
             if (delivery.events.length != updatedDelivery.events.length) {
@@ -103,8 +110,9 @@ class FetchJob {
       (deliveries) async {
         for (final delivery in deliveries) {
           final request = await saveDeliveryUsecase(
-            delivery.code,
+            code: delivery.code,
             title: delivery.title,
+            deliveryListId: delivery.deliveryListId,
           );
           request.fold((l) async => {}, (updatedDelivery) async {
             if (delivery.events.length != updatedDelivery.events.length) {

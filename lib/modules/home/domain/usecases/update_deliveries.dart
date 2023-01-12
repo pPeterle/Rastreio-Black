@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import '../entities/delivery.dart';
 import '../errors/errors.dart';
-import '../repositories/track_repository.dart';
+import '../repositories/delivery_repository.dart';
 
 abstract class UpdateDeliveriesUsecase {
   Future<Either<Failure, List<Delivery>>> call();

@@ -1,18 +1,18 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/errors/errors.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/usecases/save_deliviery.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/pages/delivery_list/delivery_list_bloc.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/pages/delivery_list/events/delivery_list_events.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/widgets/edit_delivery/states/edit_delivery_states.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../../events/home_events.dart';
-import '../../home_bloc.dart';
 import 'events/edit_delivery_events.dart';
 
 class EditDeliveryBloc extends Bloc<EditDeliveryEvents, EditDeliveryStates> {
   final SaveDeliveryUsecase rastrearEncomenda;
-  final HomeBloc _homeBloc;
+  final DeliveryListBloc _deliveryListBloc;
 
-  EditDeliveryBloc(this.rastrearEncomenda, this._homeBloc)
+  EditDeliveryBloc(this.rastrearEncomenda, this._deliveryListBloc)
       : super(
           EditDeliveryBaseState(
             canSaveDelivery: false,
@@ -27,7 +27,11 @@ class EditDeliveryBloc extends Bloc<EditDeliveryEvents, EditDeliveryStates> {
     SaveEditDelivery event,
     Emitter<EditDeliveryStates> emit,
   ) async {
-    final result = await rastrearEncomenda(event.code, title: event.title);
+    final result = await rastrearEncomenda(
+      code: event.code,
+      title: event.title,
+      deliveryListId: event.deliveryListId,
+    );
     return result.fold(
       (fail) {
         if (fail is DataSourceError) {
@@ -41,7 +45,8 @@ class EditDeliveryBloc extends Bloc<EditDeliveryEvents, EditDeliveryStates> {
         }
       },
       (r) {
-        _homeBloc.add(GetHomeDataEvent());
+        _deliveryListBloc
+            .add(GetDeliveryListDataEvent(id: event.deliveryListId));
         Modular.to.pop(r);
       },
     );

@@ -1,70 +1,41 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter_clean_architeture/modules/home/domain/usecases/delete_delivery.dart';
-import 'package:flutter_clean_architeture/modules/home/domain/usecases/get_all_deliveries.dart';
-import 'package:flutter_clean_architeture/modules/home/domain/usecases/update_deliveries.dart';
+import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery_list.dart';
+import 'package:flutter_clean_architeture/modules/home/domain/usecases/delete_deleveries_list.dart';
+import 'package:flutter_clean_architeture/modules/home/domain/usecases/get_all_deliveries_list.dart';
+import 'package:flutter_clean_architeture/modules/home/domain/usecases/rename_deliveries_list.dart';
+import 'package:flutter_clean_architeture/modules/home/domain/usecases/save_delivery_list.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/pages/delivery_list/delivery_list_bloc.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/pages/delivery_list/events/delivery_list_events.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/states/home_state.dart';
 
-import '../domain/entities/delivery.dart';
 import 'events/home_events.dart';
 
 class HomeBloc extends Bloc<HomeEvents, HomeState> {
-  final GetAllDeliveriesUsecase getAllDelivery;
-  final UpdateDeliveriesUsecase updateDeliveriesUsecase;
-  final DeleteDeliveryUsecase deleteDeliveriesUsecase;
+  final GetAllDeliveriesListUsecase getAllDeliveriesListUsecase;
+  final SaveDeliveryListUsecase saveDeliveryListUsecase;
+  final RenameDeliveryListUsecase renameDeliveryListUsecase;
+  final DeleteDeliveryListUsecase deleteDeliveryListUsecase;
+
+  final DeliveryListBloc _deliveryListBloc;
 
   HomeBloc(
-    this.getAllDelivery,
-    this.updateDeliveriesUsecase,
-    this.deleteDeliveriesUsecase,
+    this.getAllDeliveriesListUsecase,
+    this.saveDeliveryListUsecase,
+    this.renameDeliveryListUsecase,
+    this.deleteDeliveryListUsecase,
+    this._deliveryListBloc,
   ) : super(HomeStart()) {
-    on<GetHomeDataEvent>(_getAllDelivery);
-    on<UpdateDeliveriesEvent>(_updateDeliveries);
-    on<DeleteDeliveryEvent>(_deleteDelivery);
+    on<GetHomeDataEvent>(_getHomeData);
     on<ChangeOrderBy>(_changeOrderBy);
+    on<AddNewDeliveryListEvent>(_newDeliveryList);
+    on<RenameDeliveryListEvent>(_renameDeliveryList);
+    on<DeleteDeliveryListEvent>(_deleteDeliveryList);
+    on<UpdateTabIndex>(_updateTabIndex);
   }
 
-  Future<void> _getAllDelivery(
-    GetHomeDataEvent event,
-    Emitter<HomeState> emit,
-  ) async {
-    emit(HomeLoading());
-    final result = await getAllDelivery();
-    final state = result.fold((l) => HomeError(l), _mapSuccess);
-    emit(state);
-  }
-
-  Future<void> _updateDeliveries(
-    UpdateDeliveriesEvent event,
-    Emitter<HomeState> emit,
-  ) async {
-    emit(HomeLoading());
-    final result = await updateDeliveriesUsecase();
-    final state = result.fold((l) => HomeError(l), _mapSuccess);
-    emit(state);
-  }
-
-  Future<void> _deleteDelivery(
-    DeleteDeliveryEvent event,
-    Emitter<HomeState> emit,
-  ) async {
-    emit(HomeLoading());
-    final result = await deleteDeliveriesUsecase(event.delivery);
-    result.fold((l) => HomeError(l), (r) => add(GetHomeDataEvent()));
-  }
-
-  HomeSuccess _mapSuccess(List<Delivery> list) {
-    final completedDeliveries =
-        list.where((delivery) => delivery.isCompleted).toList();
-    final onCompletedDeliveries =
-        list.where((delivery) => !delivery.isCompleted).toList();
-
-    return HomeSuccess(
-      deliveries: onCompletedDeliveries,
-      completedDeliveries: completedDeliveries,
-    );
-  }
+  DeliveryList get getDeliveryList => state.tabs[state.tabIndex];
 
   Future<void> _changeOrderBy(
     ChangeOrderBy event,
@@ -73,48 +44,75 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
     if (state is! HomeSuccess) return;
     final successState = state as HomeSuccess;
 
-    final deliveriesOrdered = orderList(successState.deliveries, event.orderBy);
-    final completedDeliveriesOrdered =
-        orderList(successState.completedDeliveries, event.orderBy);
-
     emit(
       HomeSuccess(
-        deliveries: deliveriesOrdered,
-        completedDeliveries: completedDeliveriesOrdered,
+        tabIndex: successState.tabIndex,
+        tabs: successState.tabs,
         orderBy: event.orderBy,
       ),
     );
+
+    _deliveryListBloc.add(GetDeliveryListDataEvent(
+      id: getDeliveryList.uuid,
+      orderBy: state.orderBy,
+    ));
   }
 
-  List<Delivery> orderList(List<Delivery> list, OrderBy orderBy) {
-    switch (orderBy) {
-      case OrderBy.date:
-        list.sort((a, b) {
-          final firstDate = a.events[0].data.split('/');
-          final secondDate = b.events[0].data.split('/');
-          return DateTime(
-            int.parse(firstDate[2]),
-            int.parse(firstDate[1]),
-            int.parse(firstDate[0]),
-          ).isAfter(
-            DateTime(
-              int.parse(secondDate[2]),
-              int.parse(secondDate[1]),
-              int.parse(secondDate[0]),
-            ),
-          )
-              ? 1
-              : 0;
-        });
-        break;
+  Future<void> _newDeliveryList(
+    AddNewDeliveryListEvent event,
+    Emitter<HomeState> emit,
+  ) async {
+    final result = await saveDeliveryListUsecase(event.title);
+    result.fold((l) => emit(HomeError(l)), (r) {});
 
-      case OrderBy.title:
-        list.sort(
-          (a, b) => a.title.compareTo(b.title),
-        );
-        break;
-    }
+    add(GetHomeDataEvent());
+  }
 
-    return list;
+  FutureOr<void> _getHomeData(
+    GetHomeDataEvent event,
+    Emitter<HomeState> emit,
+  ) async {
+    final result = await getAllDeliveriesListUsecase();
+
+    final state = result.fold(
+      (l) => HomeError(l),
+      (r) => HomeSuccess(tabs: r, tabIndex: r.length - 1),
+    );
+    emit(state);
+  }
+
+  FutureOr<void> _renameDeliveryList(
+    RenameDeliveryListEvent event,
+    Emitter<HomeState> emit,
+  ) async {
+    final result = await renameDeliveryListUsecase(event.id, event.title);
+    result.fold((l) => emit(HomeError(l)), (r) {});
+
+    add(GetHomeDataEvent());
+  }
+
+  FutureOr<void> _deleteDeliveryList(
+    DeleteDeliveryListEvent event,
+    Emitter<HomeState> emit,
+  ) async {
+    final result = await deleteDeliveryListUsecase(event.deliveryList);
+    result.fold((l) => emit(HomeError(l)), (r) {});
+
+    add(GetHomeDataEvent());
+  }
+
+  FutureOr<void> _updateTabIndex(
+    UpdateTabIndex event,
+    Emitter<HomeState> emit,
+  ) async {
+    if (event.tabIndex == state.tabIndex) return;
+
+    emit(
+      HomeSuccess(
+        tabs: state.tabs,
+        tabIndex: event.tabIndex,
+        orderBy: state.orderBy,
+      ),
+    );
   }
 }

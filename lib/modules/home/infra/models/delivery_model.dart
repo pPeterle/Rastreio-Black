@@ -4,8 +4,12 @@ import 'package:hive/hive.dart';
 
 part 'delivery_model.g.dart';
 
-@HiveType(typeId: 0)
+@HiveType(typeId: DeliveryModel.typeId)
 class DeliveryModel extends HiveObject {
+  static const typeId = 0;
+
+  @HiveField(4)
+  final String deliveryListId;
   @HiveField(1)
   final String code;
   @HiveField(2)
@@ -17,6 +21,7 @@ class DeliveryModel extends HiveObject {
     required this.code,
     required this.events,
     required this.title,
+    required this.deliveryListId,
   });
 
   factory DeliveryModel.fromDromain(
@@ -27,6 +32,7 @@ class DeliveryModel extends HiveObject {
       events:
           delivery.events.map((e) => DeliveryEventModel.fromDomain(e)).toList(),
       title: delivery.title,
+      deliveryListId: delivery.deliveryListId,
     );
   }
 
@@ -39,11 +45,13 @@ class DeliveryModel extends HiveObject {
         code: code ?? this.code,
         events: events ?? this.events,
         title: title ?? this.title,
+        deliveryListId: deliveryListId,
       );
 
   Delivery mapToDomain() => Delivery(
         code: code,
         events: events.map((e) => e.mapToDomain()).toList(),
         title: title,
+        deliveryListId: deliveryListId,
       );
 }

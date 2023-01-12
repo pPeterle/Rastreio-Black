@@ -3,18 +3,18 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/errors/errors.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/usecases/save_deliviery.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/pages/delivery_list/delivery_list_bloc.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/pages/delivery_list/events/delivery_list_events.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/widgets/add_delivery/states/add_delivery_states.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../../events/home_events.dart';
-import '../../home_bloc.dart';
 import 'events/add_delivery_events.dart';
 
 class AddDeliveryBloc extends Bloc<AddDeliveryEvents, AddDeliveryStates> {
   final SaveDeliveryUsecase rastrearEncomenda;
-  final HomeBloc _homeBloc;
+  final DeliveryListBloc _deliveryListBloc;
 
-  AddDeliveryBloc(this.rastrearEncomenda, this._homeBloc)
+  AddDeliveryBloc(this.rastrearEncomenda, this._deliveryListBloc)
       : super(
           AddDeliveryBaseState(
             canSaveDelivery: false,
@@ -30,7 +30,11 @@ class AddDeliveryBloc extends Bloc<AddDeliveryEvents, AddDeliveryStates> {
 
   saveDelivery(SaveDelivery event, Emitter<AddDeliveryStates> emit) async {
     emit(AddDeliveryLoading());
-    final result = await rastrearEncomenda(event.code, title: event.title);
+    final result = await rastrearEncomenda(
+      code: event.code,
+      title: event.title,
+      deliveryListId: event.deliveryListId,
+    );
     final newState = result.fold(
       (fail) {
         if (fail is CodeNotFoundError || fail is InvalidTextError) {
@@ -42,7 +46,8 @@ class AddDeliveryBloc extends Bloc<AddDeliveryEvents, AddDeliveryStates> {
         );
       },
       (r) {
-        _homeBloc.add(GetHomeDataEvent());
+        _deliveryListBloc
+            .add(GetDeliveryListDataEvent(id: event.deliveryListId));
         Modular.to.pop();
         return AddDeliveryBaseState(canSaveDelivery: true);
       },

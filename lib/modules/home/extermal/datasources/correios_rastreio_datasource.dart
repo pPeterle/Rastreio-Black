@@ -9,7 +9,8 @@ class CorreiosRastreioDatasource implements RemoteDeliveryDataSource {
   CorreiosRastreioDatasource(this.correios);
 
   @override
-  Future<DeliveryModel> trackDelivery(String code) async {
+  Future<DeliveryModel> trackDelivery(
+      String code, String deliveryListId) async {
     final delivery = await correios.rastrearEncomenda(code);
     final events = delivery.events
         .map(
@@ -23,6 +24,10 @@ class CorreiosRastreioDatasource implements RemoteDeliveryDataSource {
           ),
         )
         .toList();
-    return DeliveryModel(code: delivery.code, events: events, title: "");
+    return DeliveryModel(
+        code: delivery.code,
+        events: events,
+        title: "",
+        deliveryListId: deliveryListId);
   }
 }

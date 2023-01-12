@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-class HomeLoadingWidget extends StatelessWidget {
-  const HomeLoadingWidget({super.key});
+class DeliveryListLoadingWidget extends StatelessWidget {
+  const DeliveryListLoadingWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

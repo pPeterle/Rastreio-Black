@@ -3,8 +3,10 @@ import 'package:hive/hive.dart';
 
 part 'delivery_event_model.g.dart';
 
-@HiveType(typeId: 1)
-class DeliveryEventModel {
+@HiveType(typeId: DeliveryEventModel.typeId)
+class DeliveryEventModel extends HiveObject {
+  static const typeId = 1;
+
   @HiveField(0)
   final String status;
   @HiveField(1)
@@ -18,7 +20,7 @@ class DeliveryEventModel {
   @HiveField(5)
   final String? local;
 
-  const DeliveryEventModel({
+  DeliveryEventModel({
     required this.status,
     required this.data,
     required this.hora,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/home_bloc.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/widgets/add_delivery/states/add_delivery_states.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -17,6 +18,7 @@ class AddDeliveryBottomSheetWidget extends StatefulWidget {
 class _AddDeliveryBottomSheetWidgetState
     extends State<AddDeliveryBottomSheetWidget> {
   final AddDeliveryBloc bloc = Modular.get();
+  final HomeBloc homeBloc = Modular.get();
   final TextEditingController _codeTextEditingController =
       TextEditingController();
   final TextEditingController _titleTextEditingController =
@@ -138,6 +140,7 @@ class _AddDeliveryBottomSheetWidgetState
       SaveDelivery(
         code: _codeTextEditingController.text,
         title: _titleTextEditingController.text,
+        deliveryListId: homeBloc.getDeliveryList.uuid,
       ),
     );
   }

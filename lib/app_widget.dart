@@ -9,6 +9,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       routeInformationParser: Modular.routeInformationParser,
       routerDelegate: Modular.routerDelegate,
+      debugShowCheckedModeBanner: false,
       title: 'Rastreio No Ads',
       theme: ThemeData(
         useMaterial3: true,

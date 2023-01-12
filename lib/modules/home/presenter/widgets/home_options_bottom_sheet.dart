@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/home_bloc.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/states/home_state.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_delete_delivery_list_dialog%20copy.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_rename_delivery_list_dialog.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import 'home_sort_list_dialog.dart';
 
 class HomeOptionsBottomSheet extends StatelessWidget {
-  HomeOptionsBottomSheet({Key? key}) : super(key: key);
+  HomeOptionsBottomSheet({
+    Key? key,
+  }) : super(key: key);
 
   final HomeBloc homeBloc = Modular.get();
 
@@ -21,17 +25,49 @@ class HomeOptionsBottomSheet extends StatelessWidget {
           if (snapshot.data is! HomeSuccess) return Container();
           final state = snapshot.data as HomeSuccess;
 
-          return ListTile(
-            title: const Text('Ordenar'),
-            subtitle: Text(state.orderBy.name),
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return HomeSortListDialog();
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: const Text('Ordenar'),
+                subtitle: Text(state.orderBy.name),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return HomeSortListDialog();
+                    },
+                  );
                 },
-              );
-            },
+              ),
+              const Divider(),
+              ListTile(
+                title: const Text('Renomear'),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return HomeRenameDeliveryListDialog(
+                        deliveryList: homeBloc.getDeliveryList,
+                      );
+                    },
+                  );
+                },
+              ),
+              ListTile(
+                title: const Text('Apagar'),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return HomeDeleteDeliveryListDialog(
+                        deliveryList: homeBloc.getDeliveryList,
+                      );
+                    },
+                  );
+                },
+              ),
+            ],
           );
         },
       ),

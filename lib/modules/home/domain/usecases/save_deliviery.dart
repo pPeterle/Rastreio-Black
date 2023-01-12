@@ -4,24 +4,42 @@ import 'package:flutter_clean_architeture/modules/home/domain/errors/errors.dart
 import 'package:flutter_clean_architeture/modules/home/domain/repositories/track_repository.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/util/delivery_code_validator.dart';
 
+import '../repositories/delivery_repository.dart';
+
 abstract class SaveDeliveryUsecase {
-  Future<Either<Failure, Delivery>> call(String code, {String? title});
+  Future<Either<Failure, Delivery>> call({
+    required String code,
+    required String deliveryListId,
+    String? title,
+  });
 }
 
 class SaveDeliveryUsecaseImpl
     with DeliveryCodeValitor
     implements SaveDeliveryUsecase {
-  final DeliveryRepository repository;
+  final TrackRepository trackRepository;
+  final DeliveryRepository deliveryRepository;
 
-  SaveDeliveryUsecaseImpl(this.repository);
+  SaveDeliveryUsecaseImpl(this.trackRepository, this.deliveryRepository);
 
   @override
-  Future<Either<Failure, Delivery>> call(String code, {String? title}) async {
+  Future<Either<Failure, Delivery>> call({
+    required String code,
+    required String deliveryListId,
+    String? title,
+  }) async {
     if (!regexCodeValidator.hasMatch(code)) {
       return Left(InvalidTextError());
     }
 
-    final track = await repository.track(code, title: title);
-    return track.fold((l) => left(l), (r) => repository.saveDelivery(r));
+    final track = await trackRepository.track(
+      code: code,
+      title: title,
+      deliveryListId: deliveryListId,
+    );
+    return track.fold(
+      (l) => left(l),
+      (r) => deliveryRepository.saveDelivery(r),
+    );
   }
 }

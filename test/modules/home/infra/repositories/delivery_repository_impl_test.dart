@@ -56,7 +56,7 @@ void main() {
     when(() => localDatasource.getAllDeliveryModels())
         .thenAnswer((i) async => [delivery]);
 
-    final result = await repository.getAllDeliveries();
+    final result = await repository.getDeliveriesByList();
 
     expect(result.getOrElse(() => fail('Deve ser um right')).length, equals(1));
   });
@@ -67,7 +67,7 @@ void main() {
     final delivery = DeliveryModel(code: 'ab', events: [], title: "");
     when(() => localDatasource.getAllDeliveryModels()).thenThrow(Exception());
 
-    final result = await repository.getAllDeliveries();
+    final result = await repository.getDeliveriesByList();
 
     expect(result.fold(id, id), isA<DataSourceError>());
   });

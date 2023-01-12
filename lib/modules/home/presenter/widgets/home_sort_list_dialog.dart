@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/events/home_events.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/home_bloc.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/states/home_state.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+
+import '../../utils/order_by.dart';
+import '../events/home_events.dart';
 
 class HomeSortListDialog extends StatelessWidget {
   HomeSortListDialog({Key? key}) : super(key: key);
@@ -52,7 +54,7 @@ class HomeSortListDialog extends StatelessWidget {
                     homeBloc.add(ChangeOrderBy(value!));
                   },
                   title: const Text('Título'),
-                )
+                ),
               ],
             );
           },

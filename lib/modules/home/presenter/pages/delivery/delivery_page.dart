@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/events/home_events.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/home_bloc.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/pages/delivery/delivery_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../widgets/edit_delivery/edit_delivery_widget.dart';
+import '../../widgets/edit_delivery/edit_delivery_widget.dart';
+import 'events/delivery_events.dart';
 
 class DeliveryPage extends StatefulWidget {
   final Delivery delivery;
@@ -16,7 +16,7 @@ class DeliveryPage extends StatefulWidget {
 }
 
 class _DeliveryPageState extends State<DeliveryPage> {
-  final HomeBloc homeBloc = Modular.get();
+  final DeliveryBloc deliveryBloc = Modular.get();
   late Delivery delivery;
 
   @override
@@ -190,8 +190,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
             ),
             TextButton(
               onPressed: () {
-                homeBloc.add(DeleteDeliveryEvent(delivery));
-                Modular.to.popUntil(ModalRoute.withName('/home'));
+                deliveryBloc.add(DeleteDeliveryEvent(delivery));
               },
               child: const Text('Excluir'),
             ),

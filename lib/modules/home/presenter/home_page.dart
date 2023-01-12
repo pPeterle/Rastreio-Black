@@ -1,18 +1,16 @@
-import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/events/home_events.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/pages/delivery_list/delivery_list_page.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/states/home_state.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/widgets/add_delivery/add_delivery_widget.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/widgets/edit_delivery/edit_delivery_widget.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_app_bar.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_bottom_app_bar.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_delivery_card.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_list_widget.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_loading_widget.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import 'events/home_events.dart';
 import 'home_bloc.dart';
-import 'states/home_state.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -27,15 +25,114 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late final Animation<double> _removeBottomAppBar;
   late final _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  late TabController tabController;
+
   final HomeBloc bloc = Modular.get();
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+
+    tabController = TabController(length: 0, vsync: this);
 
     bloc.add(GetHomeDataEvent());
 
+    setupTabBarListener();
+
+    setupAnimations();
+
+    setupAnimationListeners();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    bloc.close();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return BlocBuilder<HomeBloc, HomeState>(
+      bloc: bloc,
+      builder: (context, state) {
+        return AnimatedBuilder(
+          animation: _removeBottomAppBar,
+          child: TabBarView(
+            controller: tabController,
+            children: state.tabs
+                .map(
+                  (tab) => DeliveryListPage(
+                    id: tab.uuid,
+                  ),
+                )
+                .toList(),
+          ),
+          builder: (context, widget) {
+            return Scaffold(
+              key: _scaffoldKey,
+              appBar: HomeAppBar(
+                tabController: tabController,
+              ),
+              backgroundColor: theme.colorScheme.background,
+              body: widget,
+              floatingActionButton: _getStartAnimationFab()
+                  ? FloatingActionButton(
+                      onPressed: () {
+                        _animationController.forward();
+                      },
+                      elevation: 0,
+                      shape: const CircleBorder(),
+                      child: const Icon(Icons.add),
+                    )
+                  : null,
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerDocked,
+              bottomNavigationBar: Transform.translate(
+                offset: Offset(0, _removeBottomAppBar.value),
+                child: const HomeBottomAppBar(),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void setupTabBarListener() {
+    bloc.stream.listen((state) {
+      if (tabController.length != state.tabs.length) {
+        tabController.dispose();
+        tabController = TabController(
+          length: state.tabs.length,
+          initialIndex: state.tabIndex,
+          vsync: this,
+        );
+
+        tabController.addListener(() {
+          bloc.add(UpdateTabIndex(tabController.index));
+        });
+      }
+
+      tabController.animateTo(state.tabIndex);
+    });
+  }
+
+  void setupAnimationListeners() {
+    _animationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        showTrackDeliveryBottomSheet();
+      }
+    });
+
+    _animationBottomSheetController.addStatusListener((status) {
+      if (status == AnimationStatus.dismissed) {
+        _animationController.reverse();
+      }
+    });
+  }
+
+  void setupAnimations() {
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -55,68 +152,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           curve: Curves.easeIn,
         ),
       ),
-    );
-    _animationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        showTrackDeliveryBottomSheet();
-      }
-    });
-
-    _animationBottomSheetController.addStatusListener((status) {
-      if (status == AnimationStatus.dismissed) {
-        _animationController.reverse();
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    bloc.close();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return AnimatedBuilder(
-      animation: _removeBottomAppBar,
-      builder: (context, widget) {
-        return Scaffold(
-          key: _scaffoldKey,
-          appBar: const HomeAppBar(),
-          backgroundColor: theme.colorScheme.background,
-          body: StreamBuilder<HomeState>(
-            stream: bloc.stream,
-            initialData: HomeStart(),
-            builder: (context, snapshot) {
-              return AnimatedCrossFade(
-                firstChild: const HomeLoadingWidget(),
-                secondChild: HomeListWidget(homeState: snapshot.data!),
-                crossFadeState: snapshot.data is HomeSuccess
-                    ? CrossFadeState.showSecond
-                    : CrossFadeState.showFirst,
-                duration: const Duration(milliseconds: 300),
-              );
-            },
-          ),
-          floatingActionButton: _getStartAnimationFab()
-              ? FloatingActionButton(
-                  onPressed: () {
-                    _animationController.forward();
-                  },
-                  elevation: 0,
-                  shape: const CircleBorder(),
-                  child: const Icon(Icons.add),
-                )
-              : null,
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
-          bottomNavigationBar: Transform.translate(
-            offset: Offset(0, _removeBottomAppBar.value),
-            child: const HomeBottomAppBar(),
-          ),
-        );
-      },
     );
   }
 
@@ -165,24 +200,5 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     }
 
     return showFab;
-  }
-
-  void initPlatformState() {
-    BackgroundFetch.configure(
-        BackgroundFetchConfig(
-          minimumFetchInterval: 15,
-          startOnBoot: true,
-          stopOnTerminate: false,
-          enableHeadless: true,
-          requiresBatteryNotLow: false,
-          requiresCharging: false,
-          requiresStorageNotLow: false,
-          requiresDeviceIdle: false,
-          requiredNetworkType: NetworkType.NONE,
-        ), (String taskId) async {
-      BackgroundFetch.finish(taskId);
-    }, (String taskId) {
-      BackgroundFetch.finish(taskId);
-    });
   }
 }
