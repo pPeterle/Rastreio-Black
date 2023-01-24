@@ -78,23 +78,6 @@ class _AddDeliveryBottomSheetWidgetState
           Row(
             children: [
               Tooltip(
-                message: 'Adicionar título',
-                child: Material(
-                  child: InkWell(
-                    child: SizedBox(
-                      width: 40,
-                      height: 40,
-                      child: Icon(
-                        Icons.short_text,
-                        size: 30,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                    ),
-                    onTap: () {},
-                  ),
-                ),
-              ),
-              Tooltip(
                 message: 'Colar código',
                 child: Material(
                   child: InkWell(

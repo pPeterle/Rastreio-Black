@@ -30,7 +30,6 @@ class _DeliveryListPageState extends State<DeliveryListPage>
         orderBy: homeBloc.state.orderBy,
       ),
     );
-    print('init state');
     super.initState();
   }
 
@@ -39,6 +38,7 @@ class _DeliveryListPageState extends State<DeliveryListPage>
     super.build(context);
     return BlocBuilder<DeliveryListBloc, DeliveryListState>(
       bloc: bloc,
+      buildWhen: (previous, current) => current.deliveryListId == widget.id,
       builder: (context, state) {
         if (state is DeliveryListError) {
           return const Center(

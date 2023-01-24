@@ -29,12 +29,14 @@ class DeliveryListBloc extends Bloc<DeliveryListEvents, DeliveryListState>
     GetDeliveryListDataEvent event,
     Emitter<DeliveryListState> emit,
   ) async {
-    print('recarregando');
     final result = await getDeliveriesByList(
       deliveryListId: event.id,
       orderBy: event.orderBy,
     );
-    final state = result.fold((l) => DeliveryListError(l), _mapSuccess);
+    final state = result.fold(
+      (l) => DeliveryListError(event.id, l),
+      (r) => _mapSuccess(r, event.id),
+    );
     emit(state);
   }
 
@@ -42,19 +44,23 @@ class DeliveryListBloc extends Bloc<DeliveryListEvents, DeliveryListState>
     UpdateDeliveriesEvent event,
     Emitter<DeliveryListState> emit,
   ) async {
-    emit(DeliveryListLoading());
+    emit(DeliveryListLoading(event.id));
     final result = await updateDeliveriesUsecase();
-    final state = result.fold((l) => DeliveryListError(l), _mapSuccess);
+    final state = result.fold(
+      (l) => DeliveryListError(event.id, l),
+      (r) => _mapSuccess(r, event.id),
+    );
     emit(state);
   }
 
-  DeliveryListSuccess _mapSuccess(List<Delivery> list) {
+  DeliveryListSuccess _mapSuccess(List<Delivery> list, String deliveryListId) {
     final completedDeliveries =
         list.where((delivery) => delivery.isCompleted).toList();
     final onCompletedDeliveries =
         list.where((delivery) => !delivery.isCompleted).toList();
 
     return DeliveryListSuccess(
+      deliveryListId: deliveryListId,
       deliveries: onCompletedDeliveries,
       completedDeliveries: completedDeliveries,
     );
