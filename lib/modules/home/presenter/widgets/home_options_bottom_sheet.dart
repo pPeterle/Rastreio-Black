@@ -16,6 +16,7 @@ class HomeOptionsBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 24),
       child: StreamBuilder<HomeState>(
@@ -29,8 +30,13 @@ class HomeOptionsBottomSheet extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                title: const Text('Ordenar'),
-                subtitle: Text(state.orderBy.name),
+                title: const Text(
+                  'Ordenar',
+                ),
+                subtitle: Text(
+                  state.orderBy.name,
+                ),
+                textColor: theme.colorScheme.onBackground,
                 onTap: () {
                   showDialog(
                     context: context,
@@ -42,7 +48,11 @@ class HomeOptionsBottomSheet extends StatelessWidget {
               ),
               const Divider(),
               ListTile(
-                title: const Text('Renomear'),
+                title: const Text(
+                  'Renomear',
+                ),
+                textColor: theme.colorScheme.onBackground,
+                enabled: state.tabIndex != 0,
                 onTap: () {
                   showDialog(
                     context: context,
@@ -55,7 +65,11 @@ class HomeOptionsBottomSheet extends StatelessWidget {
                 },
               ),
               ListTile(
-                title: const Text('Apagar'),
+                title: const Text(
+                  'Apagar',
+                ),
+                textColor: theme.colorScheme.onBackground,
+                enabled: state.tabIndex != 0,
                 onTap: () {
                   showDialog(
                     context: context,

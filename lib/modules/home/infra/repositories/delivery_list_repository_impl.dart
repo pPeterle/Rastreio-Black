@@ -10,7 +10,7 @@ import '../../domain/errors/errors.dart';
 class DeliveryListRepositoryImpl implements DeliveryListRepository {
   final LocalDeliveryDatasource _localDeliveryDatasource;
   final defaultDeliveryListModel =
-      DeliveryListModel(uuid: 'uuid', title: 'my title');
+      DeliveryListModel(uuid: 'uuid', title: 'Minha Lista');
 
   DeliveryListRepositoryImpl(this._localDeliveryDatasource);
 
@@ -54,6 +54,9 @@ class DeliveryListRepositoryImpl implements DeliveryListRepository {
     DeliveryList deliveryList,
   ) async {
     try {
+      if (deliveryList.uuid == defaultDeliveryListModel.uuid) {
+        return Left(EditDefaultListError());
+      }
       final deliveries = await _localDeliveryDatasource.getAllDeliveryModels();
 
       await _localDeliveryDatasource.deleteDeliveryListModel(
@@ -79,6 +82,9 @@ class DeliveryListRepositoryImpl implements DeliveryListRepository {
     String title,
   ) async {
     try {
+      if (id == defaultDeliveryListModel.uuid) {
+        return Left(EditDefaultListError());
+      }
       await _localDeliveryDatasource.saveDeliveryListModel(
         DeliveryListModel(uuid: id, title: title),
       );

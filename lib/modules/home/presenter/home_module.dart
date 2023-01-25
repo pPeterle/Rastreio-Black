@@ -51,7 +51,7 @@ class HomeModule extends Module {
         ),
         Bind.singleton((i) => FetchJob(i.get(), i.get(), i.get())),
         Bind.singleton((i) => DeliveryBloc(i.get(), i.get())),
-        Bind.singleton((i) => AddDeliveryBloc(i.get(), i.get())),
+        Bind.factory((i) => AddDeliveryBloc(i.get(), i.get())),
         Bind.factory((i) => EditDeliveryBloc(i.get(), i.get())),
         Bind.singleton(
           (i) => DeliveryListBloc(

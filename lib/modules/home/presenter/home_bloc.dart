@@ -52,10 +52,12 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
       ),
     );
 
-    _deliveryListBloc.add(GetDeliveryListDataEvent(
-      id: getDeliveryList.uuid,
-      orderBy: state.orderBy,
-    ));
+    _deliveryListBloc.add(
+      GetDeliveryListDataEvent(
+        id: getDeliveryList.uuid,
+        orderBy: state.orderBy,
+      ),
+    );
   }
 
   Future<void> _newDeliveryList(

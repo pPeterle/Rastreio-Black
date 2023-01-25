@@ -44,6 +44,7 @@ class HomeMenuListBottomSheet extends StatelessWidget {
                         title: Text(
                           entries.value.title,
                         ),
+                        textColor: theme.colorScheme.onBackground,
                         onTap: () {
                           bloc.add(UpdateTabIndex(entries.key));
                           Modular.to.pop();
@@ -55,11 +56,12 @@ class HomeMenuListBottomSheet extends StatelessWidget {
               ListTile(
                 leading: const Icon(
                   Icons.add,
-                  color: Colors.white30,
                 ),
                 title: const Text(
                   'Criar nova lista',
                 ),
+                textColor: theme.colorScheme.onBackground,
+                iconColor: theme.colorScheme.onBackground,
                 onTap: () {
                   showDialog(
                     context: context,

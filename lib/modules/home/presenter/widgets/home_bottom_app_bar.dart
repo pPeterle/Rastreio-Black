@@ -13,13 +13,7 @@ class HomeBottomAppBar extends StatelessWidget {
 
     return BottomAppBar(
       color: theme.colorScheme.surface,
-      shape: const AutomaticNotchedShape(
-        RoundedRectangleBorder(),
-        CircleBorder(),
-      ),
-      notchMargin: 6,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
             onPressed: () {

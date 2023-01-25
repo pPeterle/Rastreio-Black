@@ -82,12 +82,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         _animationController.forward();
                       },
                       elevation: 0,
-                      shape: const CircleBorder(),
                       child: const Icon(Icons.add),
                     )
                   : null,
               floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerDocked,
+                  FloatingActionButtonLocation.endContained,
               bottomNavigationBar: Transform.translate(
                 offset: Offset(0, _removeBottomAppBar.value),
                 child: const HomeBottomAppBar(),
