@@ -9,10 +9,11 @@ import 'package:flutter_clean_architeture/modules/home/domain/usecases/save_deli
 import 'package:flutter_clean_architeture/modules/home/presenter/pages/delivery_list/delivery_list_bloc.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/pages/delivery_list/events/delivery_list_events.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/states/home_state.dart';
+import 'package:flutter_clean_architeture/modules/home/utils/mixins/toast.dart';
 
 import 'events/home_events.dart';
 
-class HomeBloc extends Bloc<HomeEvents, HomeState> {
+class HomeBloc extends Bloc<HomeEvents, HomeState> with ToastNotification {
   final GetAllDeliveriesListUsecase getAllDeliveriesListUsecase;
   final SaveDeliveryListUsecase saveDeliveryListUsecase;
   final RenameDeliveryListUsecase renameDeliveryListUsecase;
@@ -65,7 +66,12 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
     Emitter<HomeState> emit,
   ) async {
     final result = await saveDeliveryListUsecase(event.title);
-    result.fold((l) => emit(HomeError(l)), (r) {});
+    result.fold(
+      (l) {
+        showText('Erro ao adicionar lista');
+      },
+      (r) {},
+    );
 
     add(GetHomeDataEvent());
   }
@@ -88,7 +94,12 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
     Emitter<HomeState> emit,
   ) async {
     final result = await renameDeliveryListUsecase(event.id, event.title);
-    result.fold((l) => emit(HomeError(l)), (r) {});
+    result.fold(
+      (l) {
+        showText('Erro ao renomear lista');
+      },
+      (r) {},
+    );
 
     add(GetHomeDataEvent());
   }
@@ -98,7 +109,12 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
     Emitter<HomeState> emit,
   ) async {
     final result = await deleteDeliveryListUsecase(event.deliveryList);
-    result.fold((l) => emit(HomeError(l)), (r) {});
+    result.fold(
+      (l) {
+        showText('Erro ao excluir lista');
+      },
+      (r) {},
+    );
 
     add(GetHomeDataEvent());
   }

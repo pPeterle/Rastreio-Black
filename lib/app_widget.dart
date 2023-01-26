@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -6,11 +7,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Modular.setObservers([BotToastNavigatorObserver()]);
+
     return MaterialApp.router(
       routeInformationParser: Modular.routeInformationParser,
       routerDelegate: Modular.routerDelegate,
       debugShowCheckedModeBanner: false,
       title: 'Rastreio No Ads',
+      builder: BotToastInit(),
       theme: ThemeData(
         useMaterial3: true,
         //colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff001d3d)),
