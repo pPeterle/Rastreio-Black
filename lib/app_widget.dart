@@ -27,6 +27,11 @@ class MyApp extends StatelessWidget {
           surface: Color(0xff212224),
           onSurface: Color(0xffA1A1A1),
         ),
+        textTheme: TextTheme(
+          bodyLarge: const TextStyle(color: Colors.white),
+          bodyMedium: const TextStyle(color: Colors.white),
+          titleMedium: TextStyle(color: Colors.white.withOpacity(0.8)),
+        ),
       ),
     );
   }

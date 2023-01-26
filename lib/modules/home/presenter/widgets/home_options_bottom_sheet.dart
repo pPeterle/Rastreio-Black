@@ -3,6 +3,7 @@ import 'package:flutter_clean_architeture/modules/home/presenter/home_bloc.dart'
 import 'package:flutter_clean_architeture/modules/home/presenter/states/home_state.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_delete_delivery_list_dialog%20copy.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_rename_delivery_list_dialog.dart';
+import 'package:flutter_clean_architeture/modules/home/utils/order_by.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import 'home_sort_list_dialog.dart';
@@ -34,7 +35,7 @@ class HomeOptionsBottomSheet extends StatelessWidget {
                   'Ordenar',
                 ),
                 subtitle: Text(
-                  state.orderBy.name,
+                  state.orderBy == OrderBy.title ? 'Título' : 'Data',
                 ),
                 textColor: theme.colorScheme.onBackground,
                 onTap: () {

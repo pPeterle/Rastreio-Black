@@ -18,7 +18,7 @@ class HomeMenuListBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(top: 12, bottom: 12, right: 12),
+      padding: const EdgeInsets.only(top: 24, bottom: 12, right: 12),
       child: BlocBuilder<HomeBloc, HomeState>(
         bloc: bloc,
         builder: (context, state) {
@@ -44,7 +44,6 @@ class HomeMenuListBottomSheet extends StatelessWidget {
                         title: Text(
                           entries.value.title,
                         ),
-                        textColor: theme.colorScheme.onBackground,
                         onTap: () {
                           bloc.add(UpdateTabIndex(entries.key));
                           Modular.to.pop();
@@ -60,7 +59,6 @@ class HomeMenuListBottomSheet extends StatelessWidget {
                 title: const Text(
                   'Criar nova lista',
                 ),
-                textColor: theme.colorScheme.onBackground,
                 iconColor: theme.colorScheme.onBackground,
                 onTap: () {
                   showDialog(

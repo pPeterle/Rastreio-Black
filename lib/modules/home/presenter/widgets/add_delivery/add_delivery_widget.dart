@@ -62,8 +62,13 @@ class _AddDeliveryBottomSheetWidgetState
                 error = (snapshot.data as AddDeliveryError).codeError;
               }
               return TextField(
-                decoration:
-                    InputDecoration(hintText: 'Código', errorText: error),
+                decoration: InputDecoration(
+                  hintText: 'Código',
+                  errorText: error,
+                ),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onBackground,
+                ),
                 controller: _codeTextEditingController,
               );
             },
@@ -72,7 +77,10 @@ class _AddDeliveryBottomSheetWidgetState
           TextField(
             decoration: const InputDecoration.collapsed(hintText: 'Nome'),
             controller: _titleTextEditingController,
-            style: const TextStyle(fontSize: 14),
+            style: TextStyle(
+              fontSize: 14,
+              color: Theme.of(context).colorScheme.onBackground,
+            ),
           ),
           const SizedBox(height: 10),
           Row(
@@ -80,6 +88,7 @@ class _AddDeliveryBottomSheetWidgetState
               Tooltip(
                 message: 'Colar código',
                 child: Material(
+                  color: Colors.transparent,
                   child: InkWell(
                     child: SizedBox(
                       width: 40,

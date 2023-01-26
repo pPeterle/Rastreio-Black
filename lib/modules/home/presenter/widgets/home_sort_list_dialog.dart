@@ -44,6 +44,7 @@ class HomeSortListDialog extends StatelessWidget {
                   groupValue: state.orderBy,
                   onChanged: (value) {
                     homeBloc.add(ChangeOrderBy(value!));
+                    Modular.to.pop();
                   },
                   title: const Text('Data'),
                 ),
@@ -52,6 +53,7 @@ class HomeSortListDialog extends StatelessWidget {
                   groupValue: state.orderBy,
                   onChanged: (value) {
                     homeBloc.add(ChangeOrderBy(value!));
+                    Modular.to.pop();
                   },
                   title: const Text('Título'),
                 ),
