@@ -27,6 +27,7 @@ class EditDeliveryBloc extends Bloc<EditDeliveryEvents, EditDeliveryStates> {
     SaveEditDelivery event,
     Emitter<EditDeliveryStates> emit,
   ) async {
+    emit(EditDeliveryLoading());
     final result = await rastrearEncomenda(
       code: event.code,
       title: event.title,

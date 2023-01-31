@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_menu_list_bottom_sheet.dart';
-import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_options_bottom_sheet.dart';
 
 class HomeBottomAppBar extends StatelessWidget {
+  final void Function() onMenuPressed;
+  final void Function() onOptionsPressed;
+
   const HomeBottomAppBar({
     Key? key,
+    required this.onMenuPressed,
+    required this.onOptionsPressed,
   }) : super(key: key);
 
   @override
@@ -16,25 +19,11 @@ class HomeBottomAppBar extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (_) {
-                  return HomeMenuListBottomSheet();
-                },
-              );
-            },
+            onPressed: onMenuPressed,
             icon: const Icon(Icons.menu),
           ),
           IconButton(
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (context) {
-                  return HomeOptionsBottomSheet();
-                },
-              );
-            },
+            onPressed: onOptionsPressed,
             icon: const Icon(Icons.more_vert),
           )
         ],

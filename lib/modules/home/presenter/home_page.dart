@@ -8,9 +8,11 @@ import 'package:flutter_clean_architeture/modules/home/presenter/widgets/add_del
 import 'package:flutter_clean_architeture/modules/home/presenter/widgets/edit_delivery/edit_delivery_widget.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_app_bar.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_bottom_app_bar.dart';
+import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_options_bottom_sheet.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import 'home_bloc.dart';
+import 'widgets/home_menu_list_bottom_sheet.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -89,7 +91,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   FloatingActionButtonLocation.endContained,
               bottomNavigationBar: Transform.translate(
                 offset: Offset(0, _removeBottomAppBar.value),
-                child: const HomeBottomAppBar(),
+                child: HomeBottomAppBar(
+                  onMenuPressed: showMenuBottomSheet,
+                  onOptionsPressed: showOptionsBottomSheet,
+                ),
               ),
             );
           },
@@ -151,6 +156,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           curve: Curves.easeIn,
         ),
       ),
+    );
+  }
+
+  void showOptionsBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return HomeOptionsBottomSheet();
+      },
+    );
+  }
+
+  void showMenuBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return HomeMenuListBottomSheet();
+      },
     );
   }
 

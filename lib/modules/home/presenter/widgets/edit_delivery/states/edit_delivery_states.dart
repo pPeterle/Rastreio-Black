@@ -8,8 +8,8 @@ class EditDeliveryBaseState extends EditDeliveryStates {
   EditDeliveryBaseState({required super.canSaveDelivery});
 }
 
-class AddDeliveryLoading extends EditDeliveryStates {
-  AddDeliveryLoading() : super(canSaveDelivery: false);
+class EditDeliveryLoading extends EditDeliveryStates {
+  EditDeliveryLoading() : super(canSaveDelivery: false);
 }
 
 class EditDeliveryForm extends EditDeliveryStates {
