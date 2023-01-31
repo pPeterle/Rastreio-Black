@@ -49,6 +49,7 @@ dependencies:
   equatable: ^2.0.5
   flutter_bloc: ^8.1.1
   bot_toast: ^4.0.3
+  intl: ^0.18.0
 
 dev_dependencies:
   mocktail: ^0.3.0

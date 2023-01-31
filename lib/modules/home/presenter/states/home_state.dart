@@ -11,7 +11,7 @@ abstract class HomeState {
   HomeState({
     this.tabs = const [],
     this.tabIndex = 0,
-    this.orderBy = OrderBy.title,
+    this.orderBy = OrderBy.date,
   });
 }
 
