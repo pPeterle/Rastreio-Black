@@ -19,6 +19,6 @@ O projeto tem a estrutura do Clean Architeture, com 4 camadas de abstração (Pr
 - [x] Tela Detalhes
 - [x] Testes Infra, External e Domain
 - [x] Dark Mode
-- [ ] Adicionar Animação de Loading customizada (Lottie)
-- [ ] Enviar Notificação
+- [x] Adicionar Animação de Loading customizada (Lottie)
+- [x] Enviar Notificação
 - [ ] Adicionar testes na camada presenter
