@@ -1,4 +1,4 @@
-# Rastreio No Ads
+# Rastreio Black
 
 Projeto em Flutter para rastreio de encomendas nos correios, totalmente free e sem anúncios
 
@@ -21,4 +21,5 @@ O projeto tem a estrutura do Clean Architeture, com 4 camadas de abstração (Pr
 - [x] Dark Mode
 - [x] Adicionar Animação de Loading customizada (Lottie)
 - [x] Enviar Notificação
+- [x] Publicar na Play Store
 - [ ] Adicionar testes na camada presenter
