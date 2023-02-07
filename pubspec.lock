@@ -197,10 +197,10 @@ packages:
     dependency: "direct main"
     description:
       name: correios_rastreio
-      sha256: "0e9475ad0f320d1f39051296ada652e5294ec57bf90230b5060ec0be2fed16cf"
+      sha256: "0be485e82af3408a5bda8acc4b9d5b08691eb3d052beaa3154bf51f09c5e54e5"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   coverage:
     dependency: transitive
     description:
