@@ -48,56 +48,64 @@ class FetchJob {
   @pragma('vm:entry-point')
   static void backgroundFetchHeadlessTask(HeadlessTask task) async {
     String taskId = task.taskId;
+    print('[BackgroundFetch] Headless event received.');
     bool isTimeout = task.timeout;
     if (isTimeout) {
       BackgroundFetch.finish(taskId);
       return;
     }
 
-    await Hive.initFlutter();
+    try {
+      await Hive.initFlutter();
 
-    final notification = NotificationService();
-    final remoteDasource = CorreiosRastreioDatasource(CorreiosRastreio());
-    final localDatasource = HiveDatasource();
-    final deliveryRepository = DeliveryRepositoryImpl(
-      remoteDasource,
-      localDatasource,
-    );
-    final trackRepository = TrackRepositoryImpl(remoteDasource);
+      final notification = NotificationService();
+      final remoteDasource = CorreiosRastreioDatasource(CorreiosRastreio());
+      final localDatasource = HiveDatasource();
+      final deliveryRepository = DeliveryRepositoryImpl(
+        remoteDasource,
+        localDatasource,
+      );
+      final trackRepository = TrackRepositoryImpl(remoteDasource);
 
-    final getDeliveries = GetAllDeliveriesUsecaseImpl(deliveryRepository);
-    final saveDeliveries =
-        SaveDeliveryUsecaseImpl(trackRepository, deliveryRepository);
+      final getDeliveries = GetAllDeliveriesUsecaseImpl(deliveryRepository);
+      final saveDeliveries =
+          SaveDeliveryUsecaseImpl(trackRepository, deliveryRepository);
 
-    final localDeliveries = await getDeliveries();
+      final localDeliveries = await getDeliveries();
 
-    await localDeliveries.fold(
-      (l) async => {},
-      (deliveries) async {
-        for (final delivery in deliveries) {
-          //if (delivery.isCompleted) return;
-          final request = await saveDeliveries(
-            code: delivery.code,
-            title: delivery.title,
-            deliveryListId: delivery.deliveryListId,
-          );
-          await request.fold((l) async {}, (updatedDelivery) async {
-            //if (delivery.events.length != updatedDelivery.events.length) {
-            final lastEvent = updatedDelivery.events.first;
-            await notification.showNotification(
-              'Atualização no ${delivery.title.isEmpty ? delivery.code : delivery.title}',
-              lastEvent.status,
+      await localDeliveries.fold(
+        (l) async => {},
+        (deliveries) async {
+          for (final delivery in deliveries) {
+            if (delivery.isCompleted) return;
+            final request = await saveDeliveries(
+              code: delivery.code,
+              title: delivery.title,
+              deliveryListId: delivery.deliveryListId,
             );
-            //}
-          });
-        }
-      },
-    );
+            await request.fold((l) async {}, (updatedDelivery) async {
+              if (delivery.events.length != updatedDelivery.events.length) {
+                final lastEvent = updatedDelivery.events.first;
+                print('[BackgroundFetch] enviando notificacao.');
+                await notification.showNotification(
+                  'Atualização no ${delivery.title.isEmpty ? delivery.code : delivery.title}',
+                  lastEvent.status,
+                );
+              }
+            });
+          }
+        },
+      );
+    } catch (e) {
+      print('[BackgroundFetch] algum erro aocnteceu');
+      print('[BackgroundFetch] ${e.toString()}');
+    }
 
     BackgroundFetch.finish(taskId);
   }
 
   Future<void> fetchData() async {
+    print('[BackgroundFetch] event received.');
     final localDeliveries = await getAllDeliveriesUsecase();
 
     await localDeliveries.fold(
