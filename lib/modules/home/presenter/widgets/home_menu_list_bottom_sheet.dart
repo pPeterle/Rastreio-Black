@@ -27,39 +27,24 @@ class HomeMenuListBottomSheet extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               ...tabs.asMap().entries.map(
-                    (entries) => Container(
-                      decoration: BoxDecoration(
-                        color: entries.key == state.tabIndex
-                            ? theme.colorScheme.primary.withOpacity(.2)
-                            : Colors.transparent,
-                        borderRadius: const BorderRadius.horizontal(
-                          right: Radius.circular(24),
-                        ),
+                    (entries) => ListTile(
+                      title: Text(
+                        entries.value.title,
                       ),
-                      child: ListTile(
-                        leading: const Icon(
-                          Icons.account_circle,
-                          color: Colors.transparent,
-                        ),
-                        title: Text(
-                          entries.value.title,
-                        ),
-                        onTap: () {
-                          bloc.add(UpdateTabIndex(entries.key));
-                          Modular.to.pop();
-                        },
-                      ),
+                      selected: entries.key == state.tabIndex,
+                      onTap: () {
+                        bloc.add(UpdateTabIndex(entries.key));
+                        Modular.to.pop();
+                      },
                     ),
                   ),
               const Divider(),
               ListTile(
-                leading: const Icon(
-                  Icons.add,
-                ),
                 title: const Text(
                   'Criar nova lista',
                 ),
-                iconColor: theme.colorScheme.onBackground,
+                leading: const Icon(Icons.add),
+                iconColor: Colors.white.withOpacity(.8),
                 onTap: () {
                   showDialog(
                     context: context,
