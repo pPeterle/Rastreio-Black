@@ -75,20 +75,20 @@ class FetchJob {
       (l) async => {},
       (deliveries) async {
         for (final delivery in deliveries) {
-          if (delivery.isCompleted) return;
+          //if (delivery.isCompleted) return;
           final request = await saveDeliveries(
             code: delivery.code,
             title: delivery.title,
             deliveryListId: delivery.deliveryListId,
           );
-          request.fold((l) async => {}, (updatedDelivery) async {
-            if (delivery.events.length != updatedDelivery.events.length) {
-              final lastEvent = updatedDelivery.events.first;
-              await notification.showNotification(
-                'Atualização no ${delivery.title.isEmpty ? delivery.code : delivery.title}',
-                lastEvent.status,
-              );
-            }
+          await request.fold((l) async {}, (updatedDelivery) async {
+            //if (delivery.events.length != updatedDelivery.events.length) {
+            final lastEvent = updatedDelivery.events.first;
+            await notification.showNotification(
+              'Atualização no ${delivery.title.isEmpty ? delivery.code : delivery.title}',
+              lastEvent.status,
+            );
+            //}
           });
         }
       },
@@ -104,17 +104,18 @@ class FetchJob {
       (l) async => {},
       (deliveries) async {
         for (final delivery in deliveries) {
+          if (delivery.isCompleted) return;
           final request = await saveDeliveryUsecase(
             code: delivery.code,
             title: delivery.title,
             deliveryListId: delivery.deliveryListId,
           );
-          request.fold((l) async => {}, (updatedDelivery) async {
+          await request.fold((l) async => {}, (updatedDelivery) async {
             if (delivery.events.length != updatedDelivery.events.length) {
-              final lastEvent = updatedDelivery.events.last;
+              final lastEvent = updatedDelivery.events.first;
               await notificationService.showNotification(
                 'Atualização no ${delivery.title.isEmpty ? delivery.code : delivery.title} as ${lastEvent.hora}',
-                "Local: ${lastEvent.local} e Status: ${lastEvent.status}",
+                lastEvent.status,
               );
             }
           });

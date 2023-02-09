@@ -10,6 +10,7 @@ import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_ap
 import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_bottom_app_bar.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/widgets/home_options_bottom_sheet.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:upgrader/upgrader.dart';
 
 import 'home_bloc.dart';
 import 'widgets/home_menu_list_bottom_sheet.dart';
@@ -55,51 +56,53 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return BlocBuilder<HomeBloc, HomeState>(
-      bloc: bloc,
-      builder: (context, state) {
-        return AnimatedBuilder(
-          animation: _removeBottomAppBar,
-          child: TabBarView(
-            controller: tabController,
-            children: state.tabs
-                .map(
-                  (tab) => DeliveryListPage(
-                    id: tab.uuid,
-                  ),
-                )
-                .toList(),
-          ),
-          builder: (context, widget) {
-            return Scaffold(
-              key: _scaffoldKey,
-              appBar: HomeAppBar(
-                tabController: tabController,
-              ),
-              backgroundColor: theme.colorScheme.background,
-              body: widget,
-              floatingActionButton: _getStartAnimationFab()
-                  ? FloatingActionButton(
-                      onPressed: () {
-                        _animationController.forward();
-                      },
-                      elevation: 0,
-                      child: const Icon(Icons.add),
-                    )
-                  : null,
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.endContained,
-              bottomNavigationBar: Transform.translate(
-                offset: Offset(0, _removeBottomAppBar.value),
-                child: HomeBottomAppBar(
-                  onMenuPressed: showMenuBottomSheet,
-                  onOptionsPressed: showOptionsBottomSheet,
+    return UpgradeAlert(
+      child: BlocBuilder<HomeBloc, HomeState>(
+        bloc: bloc,
+        builder: (context, state) {
+          return AnimatedBuilder(
+            animation: _removeBottomAppBar,
+            child: TabBarView(
+              controller: tabController,
+              children: state.tabs
+                  .map(
+                    (tab) => DeliveryListPage(
+                      id: tab.uuid,
+                    ),
+                  )
+                  .toList(),
+            ),
+            builder: (context, widget) {
+              return Scaffold(
+                key: _scaffoldKey,
+                appBar: HomeAppBar(
+                  tabController: tabController,
                 ),
-              ),
-            );
-          },
-        );
-      },
+                backgroundColor: theme.colorScheme.background,
+                body: widget,
+                floatingActionButton: _getStartAnimationFab()
+                    ? FloatingActionButton(
+                        onPressed: () {
+                          _animationController.forward();
+                        },
+                        elevation: 0,
+                        child: const Icon(Icons.add),
+                      )
+                    : null,
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.endContained,
+                bottomNavigationBar: Transform.translate(
+                  offset: Offset(0, _removeBottomAppBar.value),
+                  child: HomeBottomAppBar(
+                    onMenuPressed: showMenuBottomSheet,
+                    onOptionsPressed: showOptionsBottomSheet,
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 
