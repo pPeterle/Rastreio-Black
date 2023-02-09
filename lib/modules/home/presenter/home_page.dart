@@ -57,6 +57,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return UpgradeAlert(
+      upgrader: Upgrader(
+        languageCode: 'pt',
+      ),
       child: BlocBuilder<HomeBloc, HomeState>(
         bloc: bloc,
         builder: (context, state) {
