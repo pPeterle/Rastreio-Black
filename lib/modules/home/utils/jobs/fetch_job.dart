@@ -7,8 +7,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../extermal/datasources/correios_rastreio_datasource.dart';
 import '../../extermal/datasources/hive_datasource.dart';
-import '../../infra/models/delivery_event_model.dart';
-import '../../infra/models/delivery_model.dart';
 import '../../infra/repositories/delivery_repository_impl.dart';
 import '../../infra/repositories/track_repository_impl.dart';
 
@@ -57,9 +55,6 @@ class FetchJob {
     }
 
     await Hive.initFlutter();
-    Hive.registerAdapter(DeliveryEventModelAdapter());
-    Hive.registerAdapter(DeliveryModelAdapter());
-    await Hive.openBox<DeliveryModel>(HiveDatasource.deliveryBoxKey);
 
     final notification = NotificationService();
     final remoteDasource = CorreiosRastreioDatasource(CorreiosRastreio());
