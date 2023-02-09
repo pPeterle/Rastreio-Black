@@ -14,7 +14,7 @@ void main() {
     when(() => correiosMock.rastrearEncomenda(any()))
         .thenAnswer((a) async => RastreioModel(code: '', events: []));
 
-    final delivery = await datasource.trackDelivery('abc');
+    final delivery = await datasource.trackDelivery('abc', 'listId');
     expect(delivery, isA<DeliveryModel>());
   });
 }

@@ -9,7 +9,7 @@ class NotificationService {
 
   void _configure() async {
     const initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
+        AndroidInitializationSettings('ic_notification');
     const initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
     );
@@ -32,7 +32,7 @@ class NotificationService {
       importance: Importance.max,
       priority: Priority.high,
       ticker: 'ticker',
-      icon: "assets/launcher_icon.png",
+      icon: 'ic_notification',
     );
     const NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
