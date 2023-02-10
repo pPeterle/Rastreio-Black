@@ -12,8 +12,11 @@ class DeliveryListWidget extends StatefulWidget {
   final DeliveryListState state;
   final Future Function() onRefresh;
 
-  const DeliveryListWidget(
-      {super.key, required this.state, required this.onRefresh});
+  const DeliveryListWidget({
+    super.key,
+    required this.state,
+    required this.onRefresh,
+  });
 
   @override
   State<DeliveryListWidget> createState() => _DeliveryListWidgetState();
@@ -49,67 +52,73 @@ class _DeliveryListWidgetState extends State<DeliveryListWidget>
       );
     }
 
-    return RefreshIndicator(
-      onRefresh: widget.onRefresh,
-      child: CustomScrollView(
-        slivers: [
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              childCount: deliveries.length,
-              (context, index) => HomeDeliveryCard(delivery: deliveries[index]),
+    return Padding(
+      padding: const EdgeInsets.all(4),
+      child: RefreshIndicator(
+        onRefresh: widget.onRefresh,
+        child: CustomScrollView(
+          slivers: [
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                childCount: deliveries.length,
+                (context, index) =>
+                    HomeDeliveryCard(delivery: deliveries[index]),
+              ),
             ),
-          ),
-          if (completedDeliveries.isNotEmpty)
-            SliverToBoxAdapter(
-              child: AnimatedBuilder(
-                animation: animationController,
-                builder: (context, child) {
-                  return Column(
-                    children: [
-                      ListTile(
-                        title:
-                            Text("Finalizados (${completedDeliveries.length})"),
-                        trailing: Transform.rotate(
-                          angle: pi * animationController.value,
-                          child: const Icon(Icons.keyboard_arrow_down),
+            if (completedDeliveries.isNotEmpty)
+              SliverToBoxAdapter(
+                child: AnimatedBuilder(
+                  animation: animationController,
+                  builder: (context, child) {
+                    return Column(
+                      children: [
+                        ListTile(
+                          title: Text(
+                            "Finalizados (${completedDeliveries.length})",
+                          ),
+                          trailing: Transform.rotate(
+                            angle: pi * animationController.value,
+                            child: const Icon(Icons.keyboard_arrow_down),
+                          ),
+                          onTap: () {
+                            if (animationController.isCompleted) {
+                              animationController.reverse();
+                            } else {
+                              animationController.forward();
+                            }
+                          },
                         ),
-                        onTap: () {
-                          if (animationController.isCompleted) {
-                            animationController.reverse();
-                          } else {
-                            animationController.forward();
-                          }
-                        },
-                      ),
-                      Stack(
-                        alignment: Alignment.topCenter,
-                        children: [
-                          IgnorePointer(
-                            ignoring: animationController.value == 0,
-                            child: Opacity(
-                              opacity: animationController.value,
-                              child: Column(
-                                children: completedDeliveries
-                                    .map((e) => HomeDeliveryCard(delivery: e))
-                                    .toList(),
+                        Stack(
+                          alignment: Alignment.topCenter,
+                          children: [
+                            IgnorePointer(
+                              ignoring: animationController.value == 0,
+                              child: Opacity(
+                                opacity: animationController.value,
+                                child: Column(
+                                  children: completedDeliveries
+                                      .map((e) => HomeDeliveryCard(delivery: e))
+                                      .toList(),
+                                ),
                               ),
                             ),
-                          ),
-                          IgnorePointer(
-                            ignoring: animationController.value == 1,
-                            child: Opacity(
-                              opacity: 1 - animationController.value,
-                              child: const HomeEmptyListWidget(),
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  );
-                },
-              ),
-            )
-        ],
+                            if (deliveries.isEmpty)
+                              IgnorePointer(
+                                ignoring: animationController.value == 1,
+                                child: Opacity(
+                                  opacity: 1 - animationController.value,
+                                  child: const HomeEmptyListWidget(),
+                                ),
+                              ),
+                          ],
+                        )
+                      ],
+                    );
+                  },
+                ),
+              )
+          ],
+        ),
       ),
     );
   }
