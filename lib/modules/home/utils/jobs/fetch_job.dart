@@ -94,6 +94,7 @@ class FetchJob {
                 final lastEvent = updatedDelivery.events.first;
                 print('[BackgroundFetch] enviando notificacao.');
                 await notification.showNotification(
+                  updatedDelivery.id,
                   'Atualização no ${delivery.title.isEmpty ? delivery.code : delivery.title}',
                   lastEvent.status,
                 );
@@ -134,6 +135,7 @@ class FetchJob {
             if (delivery.events.length != updatedDelivery.events.length) {
               final lastEvent = updatedDelivery.events.first;
               await notificationService.showNotification(
+                updatedDelivery.id,
                 'Atualização no ${delivery.title.isEmpty ? delivery.code : delivery.title} as ${lastEvent.hora}',
                 lastEvent.status,
               );

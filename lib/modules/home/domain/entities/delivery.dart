@@ -18,4 +18,9 @@ class Delivery {
   bool get isCompleted {
     return events[0].status == _finalStatus;
   }
+
+  int get id {
+    final regex = RegExp(r'[^0-9]');
+    return int.parse(code.replaceAll(regex, ''));
+  }
 }
