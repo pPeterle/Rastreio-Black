@@ -77,13 +77,19 @@ class FetchJob {
         (l) async => {},
         (deliveries) async {
           for (final delivery in deliveries) {
-            if (delivery.isCompleted) return;
+            print(
+              '[BackgroundFetch] delivery codigo: ${delivery.code} finalizado: ${delivery.isCompleted} evento: ${delivery.events.first.data}',
+            );
+            if (delivery.isCompleted) continue;
             final request = await saveDeliveries(
               code: delivery.code,
               title: delivery.title,
               deliveryListId: delivery.deliveryListId,
             );
             await request.fold((l) async {}, (updatedDelivery) async {
+              print(
+                '[BackgroundFetch] delivery atualizado codigo: ${updatedDelivery.code} finalizado: ${updatedDelivery.isCompleted} quantidade eventos: ${updatedDelivery.events.length} evento: ${updatedDelivery.events.first.data}',
+              );
               if (delivery.events.length != updatedDelivery.events.length) {
                 final lastEvent = updatedDelivery.events.first;
                 print('[BackgroundFetch] enviando notificacao.');
@@ -112,13 +118,19 @@ class FetchJob {
       (l) async => {},
       (deliveries) async {
         for (final delivery in deliveries) {
-          if (delivery.isCompleted) return;
+          print(
+            '[BackgroundFetch] delivery codigo: ${delivery.code} finalizado: ${delivery.isCompleted} evento: ${delivery.events.first.data}',
+          );
+          if (delivery.isCompleted) continue;
           final request = await saveDeliveryUsecase(
             code: delivery.code,
             title: delivery.title,
             deliveryListId: delivery.deliveryListId,
           );
           await request.fold((l) async => {}, (updatedDelivery) async {
+            print(
+              '[BackgroundFetch] delivery atualizado codigo: ${updatedDelivery.code} finalizado: ${updatedDelivery.isCompleted} quantidade eventos: ${updatedDelivery.events.length} evento: ${updatedDelivery.events.first.data}',
+            );
             if (delivery.events.length != updatedDelivery.events.length) {
               final lastEvent = updatedDelivery.events.first;
               await notificationService.showNotification(
