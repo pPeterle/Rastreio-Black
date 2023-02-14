@@ -26,7 +26,7 @@ class FetchJob {
   void configure() async {
     BackgroundFetch.configure(
         BackgroundFetchConfig(
-          minimumFetchInterval: 15,
+          minimumFetchInterval: 75,
           startOnBoot: true,
           stopOnTerminate: false,
           enableHeadless: true,
