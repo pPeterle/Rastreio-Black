@@ -26,14 +26,12 @@ class NotificationService {
   ) async {
     const AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-      'rastreio black notificação',
-      'nova encomenda',
+      'RastreioBlackNotificacao',
+      'Atualização na Encomenda',
       channelDescription:
-          'Notificação disparada quando a encomendaq se movimentar',
-      importance: Importance.max,
-      priority: Priority.high,
-      ticker: 'ticker',
+          'Notificação para quando houver atualização na sua encomenda',
       icon: 'ic_notification',
+      autoCancel: false,
     );
     const NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
