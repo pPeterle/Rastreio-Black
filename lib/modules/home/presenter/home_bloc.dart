@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery_list.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/usecases/delete_deleveries_list.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/usecases/get_all_deliveries_list.dart';
@@ -65,6 +66,11 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> with ToastNotification {
     AddNewDeliveryListEvent event,
     Emitter<HomeState> emit,
   ) async {
+    if (event.title.isEmpty) {
+      BotToast.showText(text: 'Impossível criar uma lista com nome vazio');
+      return;
+    }
+
     final result = await saveDeliveryListUsecase(event.title);
     result.fold(
       (l) {
