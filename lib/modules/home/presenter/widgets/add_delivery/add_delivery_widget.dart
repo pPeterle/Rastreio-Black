@@ -82,6 +82,18 @@ class _AddDeliveryBottomSheetWidgetState
               color: Theme.of(context).colorScheme.onBackground,
             ),
           ),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: Colors.red[900],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Text(
+              "Atualmente, o aplicativo só funciona com o código dos correios",
+              textAlign: TextAlign.justify,
+            ),
+          ),
           const SizedBox(height: 10),
           Row(
             children: [
