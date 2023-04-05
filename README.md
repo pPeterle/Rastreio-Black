@@ -4,7 +4,7 @@ Projeto em Flutter para rastreio de encomendas nos correios, totalmente free e s
 
 ## Playstore
 
-Ainda está em desenvolvimento, mas o prazo de finalização é 4 de Maio.
+Já publicado https://play.google.com/store/apps/details?id=com.rastreioblack&hl=pt-br&pli=1
 
 ## Estrutura
 
@@ -22,4 +22,4 @@ O projeto tem a estrutura do Clean Architeture, com 4 camadas de abstração (Pr
 - [x] Adicionar Animação de Loading customizada (Lottie)
 - [x] Enviar Notificação
 - [x] Publicar na Play Store
-- [ ] Adicionar testes na camada presenter
+- [x] Adicionar testes na camada presenter
