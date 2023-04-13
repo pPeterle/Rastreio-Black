@@ -1,4 +1,5 @@
 import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery_event.dart';
+import 'package:flutter_clean_architeture/modules/home/infra/models/delivery_unit_model.dart';
 import 'package:hive/hive.dart';
 
 part 'delivery_event_model.g.dart';
@@ -10,42 +11,34 @@ class DeliveryEventModel extends HiveObject {
   @HiveField(0)
   final String status;
   @HiveField(1)
-  final String data;
-  @HiveField(2)
-  final String hora;
-  @HiveField(3)
-  final String? origem;
+  final DateTime date;
   @HiveField(4)
-  final String? destino;
+  final DeliveryUnitModel? destiny;
   @HiveField(5)
-  final String? local;
+  final DeliveryUnitModel unity;
 
   DeliveryEventModel({
     required this.status,
-    required this.data,
-    required this.hora,
-    this.origem,
-    this.destino,
-    this.local,
+    required this.date,
+    required this.unity,
+    this.destiny,
   });
 
   factory DeliveryEventModel.fromDomain(DeliveryEvent event) {
     return DeliveryEventModel(
       status: event.status,
-      data: event.data,
-      hora: event.hora,
-      destino: event.destino,
-      local: event.local,
-      origem: event.origem,
+      date: event.data,
+      destiny: event.destiny != null
+          ? DeliveryUnitModel.fromDomain(event.destiny!)
+          : null,
+      unity: DeliveryUnitModel.fromDomain(event.unity),
     );
   }
 
   DeliveryEvent mapToDomain() => DeliveryEvent(
-        data: data,
-        hora: hora,
+        data: date,
         status: status,
-        destino: destino,
-        local: local,
-        origem: origem,
+        unity: unity.mapToDomain(),
+        destiny: destiny?.mapToDomain(),
       );
 }

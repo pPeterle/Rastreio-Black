@@ -8,6 +8,8 @@ part 'delivery_model.g.dart';
 class DeliveryModel extends HiveObject {
   static const typeId = 0;
 
+  @HiveField(5)
+  final DateTime expectedDate;
   @HiveField(4)
   final String deliveryListId;
   @HiveField(1)
@@ -20,6 +22,7 @@ class DeliveryModel extends HiveObject {
   DeliveryModel({
     required this.code,
     required this.events,
+    required this.expectedDate,
     required this.title,
     required this.deliveryListId,
   });
@@ -29,6 +32,7 @@ class DeliveryModel extends HiveObject {
   ) {
     return DeliveryModel(
       code: delivery.code,
+      expectedDate: delivery.expectedDate,
       events:
           delivery.events.map((e) => DeliveryEventModel.fromDomain(e)).toList(),
       title: delivery.title,
@@ -40,12 +44,14 @@ class DeliveryModel extends HiveObject {
     String? code,
     List<DeliveryEventModel>? events,
     String? title,
+    DateTime? expectedDate,
   }) =>
       DeliveryModel(
         code: code ?? this.code,
         events: events ?? this.events,
         title: title ?? this.title,
         deliveryListId: deliveryListId,
+        expectedDate: expectedDate ?? this.expectedDate,
       );
 
   Delivery mapToDomain() => Delivery(
@@ -53,5 +59,6 @@ class DeliveryModel extends HiveObject {
         events: events.map((e) => e.mapToDomain()).toList(),
         title: title,
         deliveryListId: deliveryListId,
+        expectedDate: expectedDate,
       );
 }

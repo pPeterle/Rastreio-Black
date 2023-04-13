@@ -36,7 +36,6 @@ class NotificationService {
       channelDescription:
           'Notificação para quando houver atualização na sua encomenda',
       icon: 'ic_notification',
-      autoCancel: false,
     );
     const NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);

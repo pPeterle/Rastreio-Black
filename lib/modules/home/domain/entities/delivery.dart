@@ -3,12 +3,14 @@ import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery_
 class Delivery {
   final String deliveryListId;
   final String code;
+  final DateTime expectedDate;
   final String title;
   final List<DeliveryEvent> events;
 
   Delivery({
     required this.code,
     required this.events,
+    required this.expectedDate,
     required this.title,
     required this.deliveryListId,
   });

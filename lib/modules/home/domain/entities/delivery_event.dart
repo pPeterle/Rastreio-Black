@@ -1,17 +1,15 @@
+import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery_unit.dart';
+
 class DeliveryEvent {
   final String status;
-  final String data;
-  final String hora;
-  final String? origem;
-  final String? destino;
-  final String? local;
+  final DateTime data;
+  final DeliveryUnit unity;
+  final DeliveryUnit? destiny;
 
   const DeliveryEvent({
     required this.status,
     required this.data,
-    required this.hora,
-    this.origem,
-    this.destino,
-    this.local,
+    required this.unity,
+    this.destiny,
   });
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/pages/delivery/delivery_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:intl/intl.dart';
 
 import '../../widgets/edit_delivery/edit_delivery_widget.dart';
 import 'events/delivery_events.dart';
@@ -17,12 +18,15 @@ class DeliveryPage extends StatefulWidget {
 
 class _DeliveryPageState extends State<DeliveryPage> {
   final DeliveryBloc deliveryBloc = Modular.get();
+  final dateFormat = DateFormat("dd/MM/yyyy HH:mm");
+
   late Delivery delivery;
 
   @override
   void initState() {
     super.initState();
     delivery = widget.delivery;
+    print(delivery);
   }
 
   @override
@@ -98,7 +102,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "${event.data} ${event.hora}",
+                          dateFormat.format(event.data),
                           style: theme.textTheme.bodySmall,
                         ),
                         const SizedBox(height: 4),
@@ -110,23 +114,22 @@ class _DeliveryPageState extends State<DeliveryPage> {
                               : theme.textTheme.bodyMedium,
                         ),
                         const SizedBox(height: 4),
-                        if (event.destino != null)
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.local_shipping,
-                                color: theme.colorScheme.tertiary,
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.local_shipping,
+                              color: theme.colorScheme.tertiary,
+                            ),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                "${event.unity.name} - ${event.unity.city} / ${event.unity.uf}",
+                                style: theme.textTheme.bodySmall,
                               ),
-                              const SizedBox(width: 4),
-                              Expanded(
-                                child: Text(
-                                  event.destino ?? "",
-                                  style: theme.textTheme.bodySmall,
-                                ),
-                              )
-                            ],
-                          ),
-                        if (event.local != null || event.origem != null)
+                            )
+                          ],
+                        ),
+                        if (event.destiny != null)
                           Row(
                             children: [
                               Icon(
@@ -135,7 +138,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
                               ),
                               Expanded(
                                 child: Text(
-                                  (event.local ?? event.origem) ?? "",
+                                  "${event.destiny!.name} - ${event.destiny!.city} / ${event.destiny!.uf}",
                                   style: theme.textTheme.bodySmall,
                                 ),
                               )

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:intl/intl.dart';
 
 class HomeDeliveryCard extends StatelessWidget {
   final Delivery delivery;
@@ -9,6 +10,7 @@ class HomeDeliveryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dateFormat = DateFormat("dd/MM/yyyy HH:mm");
     final theme = Theme.of(context);
 
     return Card(
@@ -41,7 +43,7 @@ class HomeDeliveryCard extends StatelessWidget {
                   ),
                   const Spacer(),
                   Text(
-                    "${delivery.events[0].data} ${delivery.events[0].hora}",
+                    dateFormat.format(delivery.events[0].data),
                     style: theme.textTheme.bodySmall,
                   )
                 ],
@@ -50,11 +52,10 @@ class HomeDeliveryCard extends StatelessWidget {
                 delivery.events[0].status,
                 style: theme.textTheme.bodyMedium,
               ),
-              if (delivery.events[0].local != null)
-                Text(
-                  delivery.events[0].local ?? "",
-                  style: theme.textTheme.bodySmall,
-                ),
+              Text(
+                "${delivery.events[0].unity.name} - ${delivery.events[0].unity.city} / ${delivery.events[0].unity.uf}",
+                style: theme.textTheme.bodySmall,
+              ),
               Text(
                 delivery.code,
                 style: theme.textTheme.bodySmall,

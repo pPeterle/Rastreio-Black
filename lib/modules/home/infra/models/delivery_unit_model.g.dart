@@ -1,41 +1,38 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'delivery_event_model.dart';
+part of 'delivery_unit_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class DeliveryEventModelAdapter extends TypeAdapter<DeliveryEventModel> {
+class DeliveryUnitModelAdapter extends TypeAdapter<DeliveryUnitModel> {
   @override
-  final int typeId = 1;
+  final int typeId = 3;
 
   @override
-  DeliveryEventModel read(BinaryReader reader) {
+  DeliveryUnitModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return DeliveryEventModel(
-      status: fields[0] as String,
-      date: fields[1] as DateTime,
-      unity: fields[5] as DeliveryUnitModel,
-      destiny: fields[4] as DeliveryUnitModel?,
+    return DeliveryUnitModel(
+      name: fields[0] as String,
+      city: fields[1] as String,
+      uf: fields[2] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, DeliveryEventModel obj) {
+  void write(BinaryWriter writer, DeliveryUnitModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(3)
       ..writeByte(0)
-      ..write(obj.status)
+      ..write(obj.name)
       ..writeByte(1)
-      ..write(obj.date)
-      ..writeByte(4)
-      ..write(obj.destiny)
-      ..writeByte(5)
-      ..write(obj.unity);
+      ..write(obj.city)
+      ..writeByte(2)
+      ..write(obj.uf);
   }
 
   @override
@@ -44,7 +41,7 @@ class DeliveryEventModelAdapter extends TypeAdapter<DeliveryEventModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is DeliveryEventModelAdapter &&
+      other is DeliveryUnitModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

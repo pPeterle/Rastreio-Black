@@ -4,6 +4,7 @@ import 'package:flutter_clean_architeture/modules/home/domain/usecases/get_all_d
 import 'package:flutter_clean_architeture/modules/home/domain/usecases/save_deliviery.dart';
 import 'package:flutter_clean_architeture/modules/home/utils/services/notification_service.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
 
 import '../../extermal/datasources/correios_rastreio_datasource.dart';
 import '../../extermal/datasources/hive_datasource.dart';
@@ -134,9 +135,10 @@ class FetchJob {
             );
             if (delivery.events.length != updatedDelivery.events.length) {
               final lastEvent = updatedDelivery.events.first;
+              final dateFormat = DateFormat("HH:mm");
               await notificationService.showNotification(
                 updatedDelivery.id,
-                'Atualização no ${delivery.title.isEmpty ? delivery.code : delivery.title} as ${lastEvent.hora}',
+                'Atualização no ${delivery.title.isEmpty ? delivery.code : delivery.title} as ${dateFormat.format(lastEvent.data)}',
                 lastEvent.status,
               );
             }

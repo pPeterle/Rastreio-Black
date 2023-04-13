@@ -2,6 +2,7 @@ import 'package:correios_rastreio/correios_rastreio.dart';
 import 'package:flutter_clean_architeture/modules/home/infra/datasource/remote_delivery_datasource.dart';
 import 'package:flutter_clean_architeture/modules/home/infra/models/delivery_event_model.dart';
 import 'package:flutter_clean_architeture/modules/home/infra/models/delivery_model.dart';
+import 'package:flutter_clean_architeture/modules/home/infra/models/delivery_unit_model.dart';
 
 class CorreiosRastreioDatasource implements RemoteDeliveryDataSource {
   final CorreiosRastreio correios;
@@ -10,24 +11,36 @@ class CorreiosRastreioDatasource implements RemoteDeliveryDataSource {
 
   @override
   Future<DeliveryModel> trackDelivery(
-      String code, String deliveryListId) async {
+    String code,
+    String deliveryListId,
+  ) async {
     final delivery = await correios.rastrearEncomenda(code);
-    final events = delivery.events
+    final events = delivery.eventos
         .map(
           (e) => DeliveryEventModel(
-            status: e.status,
-            data: e.data,
-            hora: e.hora,
-            destino: e.destino,
-            local: e.local,
-            origem: e.origem,
+            status: e.descricao,
+            date: e.data,
+            unity: DeliveryUnitModel(
+              name: e.unidade.nome,
+              city: e.unidade.endereco?.cidade ?? "",
+              uf: e.unidade.endereco?.uf ?? "",
+            ),
+            destiny: e.unidadeDestino != null
+                ? DeliveryUnitModel(
+                    name: e.unidadeDestino!.nome,
+                    city: e.unidadeDestino!.endereco?.cidade ?? "",
+                    uf: e.unidadeDestino!.endereco?.uf ?? "",
+                  )
+                : null,
           ),
         )
         .toList();
     return DeliveryModel(
-        code: delivery.code,
-        events: events,
-        title: "",
-        deliveryListId: deliveryListId);
+      code: delivery.codObjeto,
+      expectedDate: DateTime.parse(delivery.dtPrevista),
+      events: events,
+      title: "",
+      deliveryListId: deliveryListId,
+    );
   }
 }

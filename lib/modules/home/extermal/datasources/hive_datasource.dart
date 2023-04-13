@@ -1,6 +1,7 @@
 import 'package:flutter_clean_architeture/modules/home/infra/datasource/local_delivery_datasource.dart';
 import 'package:flutter_clean_architeture/modules/home/infra/models/delivery_list_model.dart';
 import 'package:flutter_clean_architeture/modules/home/infra/models/delivery_model.dart';
+import 'package:flutter_clean_architeture/modules/home/infra/models/delivery_unit_model.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -21,8 +22,9 @@ class HiveDatasource implements LocalDeliveryDatasource, Disposable {
     _registerAdapters();
 
     _deliveryBox = Hive.openBox<DeliveryModel>(HiveDatasource.deliveryBoxKey);
-    _deliveryListBox =
-        Hive.openBox<DeliveryListModel>(HiveDatasource.deliveryListBoxKey);
+    _deliveryListBox = Hive.openBox<DeliveryListModel>(
+      HiveDatasource.deliveryListBoxKey,
+    );
   }
 
   void _registerAdapters() {
@@ -34,6 +36,9 @@ class HiveDatasource implements LocalDeliveryDatasource, Disposable {
     }
     if (!Hive.isAdapterRegistered(DeliveryListModel.typeId)) {
       Hive.registerAdapter(DeliveryListModelAdapter());
+    }
+    if (!Hive.isAdapterRegistered(DeliveryUnitModel.typeId)) {
+      Hive.registerAdapter(DeliveryUnitModelAdapter());
     }
   }
 
