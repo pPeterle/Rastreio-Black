@@ -28,9 +28,11 @@ class DeliveryBloc extends Bloc<DeliveryEvents, DeliveryState> {
     }, (r) {
       emit(DeliverySuccess());
       Modular.to.popUntil(ModalRoute.withName('/home'));
-      deliveryListBloc.add(GetDeliveryListDataEvent(
-        id: event.delivery.deliveryListId,
-      ));
+      deliveryListBloc.add(
+        GetDeliveryListDataEvent(
+          id: event.delivery.deliveryListId,
+        ),
+      );
     });
   }
 }

@@ -82,16 +82,21 @@ class _AddDeliveryBottomSheetWidgetState
               color: Theme.of(context).colorScheme.onBackground,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           Container(
-            padding: const EdgeInsets.all(4),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.red[900],
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.background,
+                width: 1,
+              ),
             ),
             child: const Text(
-              "Atualmente, o aplicativo só funciona com o código dos correios",
+              "Atualmente, apenas o código dos correios é rastreado",
               textAlign: TextAlign.justify,
+              style: TextStyle(color: Colors.white70),
             ),
           ),
           const SizedBox(height: 10),

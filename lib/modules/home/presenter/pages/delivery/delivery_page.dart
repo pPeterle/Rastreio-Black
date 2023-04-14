@@ -18,7 +18,8 @@ class DeliveryPage extends StatefulWidget {
 
 class _DeliveryPageState extends State<DeliveryPage> {
   final DeliveryBloc deliveryBloc = Modular.get();
-  final dateFormat = DateFormat("dd/MM/yyyy HH:mm");
+  final dateTimeFormat = DateFormat("dd/MM/yyyy HH:mm");
+  final dateFormat = DateFormat("dd/MM/yyyy");
 
   late Delivery delivery;
 
@@ -26,7 +27,6 @@ class _DeliveryPageState extends State<DeliveryPage> {
   void initState() {
     super.initState();
     delivery = widget.delivery;
-    print(delivery);
   }
 
   @override
@@ -40,18 +40,47 @@ class _DeliveryPageState extends State<DeliveryPage> {
         ),
         backgroundColor: theme.colorScheme.background,
         actions: [
-          IconButton(
-            onPressed: () {
-              openEditBottomSheet(context);
-            },
-            icon: const Icon(Icons.edit),
-          ),
-          IconButton(
-            onPressed: () {
-              openDeleteModal(context);
-            },
-            icon: const Icon(Icons.delete),
-          ),
+          if (delivery.expectedDate != null)
+            IconButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: theme.colorScheme.surface,
+                    content: Text(
+                      'Data prevista: ${dateFormat.format(delivery.expectedDate!)}',
+                      style: TextStyle(
+                        color: theme.colorScheme.onBackground,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.calendar_month),
+            ),
+          PopupMenuButton(
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                child: TextButton(
+                  onPressed: () {
+                    Modular.to.pop();
+                    openEditBottomSheet(context);
+                  },
+                  child: const Text('Editar'),
+                ),
+              ),
+              PopupMenuItem(
+                child: TextButton(
+                  onPressed: () {
+                    Modular.to.pop();
+                    openDeleteModal(context);
+                  },
+                  child: const Text('Excluir'),
+                ),
+              ),
+            ],
+          )
         ],
       ),
       backgroundColor: theme.colorScheme.background,
@@ -102,7 +131,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          dateFormat.format(event.data),
+                          dateTimeFormat.format(event.data),
                           style: theme.textTheme.bodySmall,
                         ),
                         const SizedBox(height: 4),
@@ -117,7 +146,9 @@ class _DeliveryPageState extends State<DeliveryPage> {
                         Row(
                           children: [
                             Icon(
-                              Icons.local_shipping,
+                              event.destiny == null
+                                  ? Icons.location_on_outlined
+                                  : Icons.local_shipping,
                               color: theme.colorScheme.tertiary,
                             ),
                             const SizedBox(width: 4),

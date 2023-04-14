@@ -16,7 +16,6 @@ class HomeMenuListBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.only(top: 24, bottom: 12, right: 12),
       child: BlocBuilder<HomeBloc, HomeState>(

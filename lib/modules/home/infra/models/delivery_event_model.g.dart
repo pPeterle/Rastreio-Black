@@ -8,7 +8,7 @@ part of 'delivery_event_model.dart';
 
 class DeliveryEventModelAdapter extends TypeAdapter<DeliveryEventModel> {
   @override
-  final int typeId = 1;
+  final int typeId = 5;
 
   @override
   DeliveryEventModel read(BinaryReader reader) {

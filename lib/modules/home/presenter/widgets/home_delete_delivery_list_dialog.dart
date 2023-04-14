@@ -4,23 +4,18 @@ import 'package:flutter_clean_architeture/modules/home/presenter/events/home_eve
 import 'package:flutter_clean_architeture/modules/home/presenter/home_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-class HomeRenameDeliveryListDialog extends StatelessWidget {
+class HomeDeleteDeliveryListDialog extends StatelessWidget {
   final DeliveryList deliveryList;
   final HomeBloc homeBloc = Modular.get();
-  final TextEditingController textEditingController = TextEditingController();
 
-  HomeRenameDeliveryListDialog({super.key, required this.deliveryList});
+  HomeDeleteDeliveryListDialog({super.key, required this.deliveryList});
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Renomear lista ${deliveryList.title}'),
-      content: TextField(
-        controller: textEditingController,
-        decoration: const InputDecoration(
-          labelText: 'Nome',
-        ),
-      ),
+      title: const Text('Apagar lista'),
+      content:
+          Text("Deseja apagar a lista de encomendas ${deliveryList.title}"),
       actions: [
         TextButton(
           onPressed: () {
@@ -30,16 +25,11 @@ class HomeRenameDeliveryListDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            homeBloc.add(
-              RenameDeliveryListEvent(
-                id: deliveryList.uuid,
-                title: textEditingController.text,
-              ),
-            );
+            homeBloc.add(DeleteDeliveryListEvent(deliveryList));
             Modular.to.popUntil(ModalRoute.withName('/'));
           },
           child: const Text(
-            "Renomear",
+            "Apagar",
           ),
         ),
       ],

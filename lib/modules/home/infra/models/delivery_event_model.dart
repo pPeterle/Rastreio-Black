@@ -6,7 +6,7 @@ part 'delivery_event_model.g.dart';
 
 @HiveType(typeId: DeliveryEventModel.typeId)
 class DeliveryEventModel extends HiveObject {
-  static const typeId = 1;
+  static const typeId = 5;
 
   @HiveField(0)
   final String status;

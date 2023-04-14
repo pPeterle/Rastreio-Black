@@ -89,4 +89,33 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
       return Left(DataSourceError());
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> migrateDatasource() async {
+    try {
+      final deliveries = await _localDatasource.getAllDeliveryModelsOutdated();
+
+      final updateDeliveriesFuture = deliveries.map((delivery) async {
+        final updateDelivery = await _remoteDatasource.trackDelivery(
+          delivery.code,
+          delivery.deliveryListId,
+        );
+        return updateDelivery.copyWith(title: delivery.title);
+      });
+      final updateDeliveries = await Future.wait(updateDeliveriesFuture);
+
+      await Future.wait(
+        updateDeliveries.map((delivery) async {
+          await _localDatasource.saveDeliveryModel(delivery);
+          await _localDatasource.deleteDeliveryModelOutdated(delivery.code);
+        }),
+      );
+
+      return const Right(
+        unit,
+      );
+    } catch (e) {
+      return Left(DataSourceError());
+    }
+  }
 }

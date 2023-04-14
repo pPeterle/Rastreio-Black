@@ -2,6 +2,8 @@ import 'package:flutter_clean_architeture/modules/home/infra/datasource/local_de
 import 'package:flutter_clean_architeture/modules/home/infra/models/delivery_list_model.dart';
 import 'package:flutter_clean_architeture/modules/home/infra/models/delivery_model.dart';
 import 'package:flutter_clean_architeture/modules/home/infra/models/delivery_unit_model.dart';
+import 'package:flutter_clean_architeture/modules/home/infra/models/outdated/delivery_event_model_outdated.dart';
+import 'package:flutter_clean_architeture/modules/home/infra/models/outdated/delivery_model_outdated.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -11,8 +13,11 @@ class HiveDatasource implements LocalDeliveryDatasource, Disposable {
   static const deliveryBoxKey = 'DeliveryBoxKey';
   static const deliveryListBoxKey = 'deliveryListBoxKey';
 
+  static const newDeliveryBoxKey = 'newDeliveryBoxKey';
+
   late final Future<Box<DeliveryModel>> _deliveryBox;
   late final Future<Box<DeliveryListModel>> _deliveryListBox;
+  late final Future<Box<DeliveryModelOutdated>> _deliveryListBoxOutdated;
 
   HiveDatasource() {
     _configure();
@@ -21,10 +26,13 @@ class HiveDatasource implements LocalDeliveryDatasource, Disposable {
   Future<void> _configure() async {
     _registerAdapters();
 
-    _deliveryBox = Hive.openBox<DeliveryModel>(HiveDatasource.deliveryBoxKey);
+    _deliveryBox =
+        Hive.openBox<DeliveryModel>(HiveDatasource.newDeliveryBoxKey);
     _deliveryListBox = Hive.openBox<DeliveryListModel>(
       HiveDatasource.deliveryListBoxKey,
     );
+    _deliveryListBoxOutdated =
+        Hive.openBox<DeliveryModelOutdated>(HiveDatasource.deliveryBoxKey);
   }
 
   void _registerAdapters() {
@@ -39,6 +47,12 @@ class HiveDatasource implements LocalDeliveryDatasource, Disposable {
     }
     if (!Hive.isAdapterRegistered(DeliveryUnitModel.typeId)) {
       Hive.registerAdapter(DeliveryUnitModelAdapter());
+    }
+    if (!Hive.isAdapterRegistered(DeliveryModelOutdated.typeId)) {
+      Hive.registerAdapter(DeliveryModelOutdatedAdapter());
+    }
+    if (!Hive.isAdapterRegistered(DeliveryEventModelOutdated.typeId)) {
+      Hive.registerAdapter(DeliveryEventModelOutdatedAdapter());
     }
   }
 
@@ -86,5 +100,19 @@ class HiveDatasource implements LocalDeliveryDatasource, Disposable {
   ) async {
     final box = await _deliveryListBox;
     box.delete(deliveryListModel.uuid);
+  }
+
+  @override
+  Future<List<DeliveryModelOutdated>> getAllDeliveryModelsOutdated() async {
+    final box = await _deliveryListBoxOutdated;
+    return box.values.toList();
+  }
+
+  @override
+  Future<void> deleteDeliveryModelOutdated(
+    String code,
+  ) async {
+    final box = await _deliveryListBoxOutdated;
+    box.delete(code);
   }
 }

@@ -5,6 +5,9 @@ class SaveEditDelivery extends EditDeliveryEvents {
   final String title;
   final String deliveryListId;
 
-  SaveEditDelivery(
-      {required this.code, required this.title, required this.deliveryListId});
+  SaveEditDelivery({
+    required this.code,
+    required this.title,
+    required this.deliveryListId,
+  });
 }

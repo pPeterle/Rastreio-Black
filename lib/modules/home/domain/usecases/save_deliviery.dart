@@ -33,7 +33,7 @@ class SaveDeliveryUsecaseImpl
     }
 
     final track = await trackRepository.track(
-      code: code,
+      code: code.toUpperCase(),
       title: title,
       deliveryListId: deliveryListId,
     );

@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery_list.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/usecases/delete_deleveries_list.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/usecases/get_all_deliveries_list.dart';
+import 'package:flutter_clean_architeture/modules/home/domain/usecases/migrate_database.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/usecases/rename_deliveries_list.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/usecases/save_delivery_list.dart';
 import 'package:flutter_clean_architeture/modules/home/presenter/pages/delivery_list/delivery_list_bloc.dart';
@@ -19,6 +21,7 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> with ToastNotification {
   final SaveDeliveryListUsecase saveDeliveryListUsecase;
   final RenameDeliveryListUsecase renameDeliveryListUsecase;
   final DeleteDeliveryListUsecase deleteDeliveryListUsecase;
+  final MigrateDatabaseUsecase migrateDatabaseUsecase;
 
   final DeliveryListBloc _deliveryListBloc;
 
@@ -27,6 +30,7 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> with ToastNotification {
     this.saveDeliveryListUsecase,
     this.renameDeliveryListUsecase,
     this.deleteDeliveryListUsecase,
+    this.migrateDatabaseUsecase,
     this._deliveryListBloc,
   ) : super(HomeStart()) {
     on<GetHomeDataEvent>(_getHomeData);
@@ -86,12 +90,17 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> with ToastNotification {
     GetHomeDataEvent event,
     Emitter<HomeState> emit,
   ) async {
+    BotToast.showLoading();
+    final migrateResult = await migrateDatabaseUsecase();
+    migrateResult.fold((l) => HomeError(l), id);
+
     final result = await getAllDeliveriesListUsecase();
 
     final state = result.fold(
       (l) => HomeError(l),
       (r) => HomeSuccess(tabs: r, tabIndex: r.length - 1),
     );
+    BotToast.closeAllLoading();
     emit(state);
   }
 

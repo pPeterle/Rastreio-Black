@@ -59,7 +59,6 @@ class FetchJob {
     try {
       await Hive.initFlutter();
 
-      final notification = NotificationService();
       final remoteDasource = CorreiosRastreioDatasource(CorreiosRastreio());
       final localDatasource = HiveDatasource();
       final deliveryRepository = DeliveryRepositoryImpl(
@@ -72,6 +71,7 @@ class FetchJob {
       final saveDeliveries =
           SaveDeliveryUsecaseImpl(trackRepository, deliveryRepository);
 
+      final notification = NotificationService(getDeliveries);
       final localDeliveries = await getDeliveries();
 
       await localDeliveries.fold(

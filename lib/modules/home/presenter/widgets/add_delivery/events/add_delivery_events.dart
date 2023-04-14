@@ -5,8 +5,11 @@ class SaveDelivery extends AddDeliveryEvents {
   final String title;
   final String deliveryListId;
 
-  SaveDelivery(
-      {required this.code, required this.title, required this.deliveryListId});
+  SaveDelivery({
+    required this.code,
+    required this.title,
+    required this.deliveryListId,
+  });
 }
 
 class PasteCodeClipboard extends AddDeliveryEvents {

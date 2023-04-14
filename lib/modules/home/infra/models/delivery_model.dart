@@ -6,10 +6,10 @@ part 'delivery_model.g.dart';
 
 @HiveType(typeId: DeliveryModel.typeId)
 class DeliveryModel extends HiveObject {
-  static const typeId = 0;
+  static const typeId = 4;
 
   @HiveField(5)
-  final DateTime expectedDate;
+  final DateTime? expectedDate;
   @HiveField(4)
   final String deliveryListId;
   @HiveField(1)

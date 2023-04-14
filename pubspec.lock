@@ -197,10 +197,10 @@ packages:
     dependency: "direct main"
     description:
       name: correios_rastreio
-      sha256: "7c5aa848e931fd60c28e54e75c997be93770de8dd7965521efc57da8efb1b4c2"
+      sha256: d9a63fca3689b00e0b8610046b7b1b5254cfa0a1286b03f969fb98278b6cd873
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.3"
+    version: "2.0.4"
   coverage:
     dependency: transitive
     description:
@@ -398,6 +398,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.2"
+  flutter_native_splash:
+    dependency: "direct main"
+    description:
+      name: flutter_native_splash
+      sha256: "6777a3abb974021a39b5fdd2d46a03ca390e03903b6351f21d10e7ecc969f12d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.16"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -1029,6 +1037,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.1"
+  universal_io:
+    dependency: transitive
+    description:
+      name: universal_io
+      sha256: "06866290206d196064fd61df4c7aea1ffe9a4e7c4ccaa8fcded42dd41948005d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0"
   upgrader:
     dependency: "direct main"
     description:

@@ -37,7 +37,9 @@ class CorreiosRastreioDatasource implements RemoteDeliveryDataSource {
         .toList();
     return DeliveryModel(
       code: delivery.codObjeto,
-      expectedDate: DateTime.parse(delivery.dtPrevista),
+      expectedDate: delivery.dtPrevista != null
+          ? DateTime.parse(delivery.dtPrevista!)
+          : null,
       events: events,
       title: "",
       deliveryListId: deliveryListId,

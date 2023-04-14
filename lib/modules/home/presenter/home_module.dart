@@ -2,6 +2,7 @@ import 'package:flutter_clean_architeture/modules/home/domain/usecases/delete_de
 import 'package:flutter_clean_architeture/modules/home/domain/usecases/get_all_deliveries.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/usecases/get_all_deliveries_list.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/usecases/get_deliveries_by_list.dart';
+import 'package:flutter_clean_architeture/modules/home/domain/usecases/migrate_database.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/usecases/rename_deliveries_list.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/usecases/save_delivery_list.dart';
 import 'package:flutter_clean_architeture/modules/home/infra/repositories/delivery_list_repository_impl.dart';
@@ -34,6 +35,7 @@ class HomeModule extends Module {
         Bind.singleton((i) => HiveDatasource()),
         Bind.singleton((i) => DeliveryListRepositoryImpl(i.get())),
         Bind.singleton((i) => DeleteDeliveryListUsecaseImpl(i.get())),
+        Bind.singleton((i) => MigrateDatabaseUsecaseImpl(i.get())),
         Bind.singleton((i) => RenameDeliveryListUsecaseImpl(i.get())),
         Bind.singleton((i) => SaveDeliveryListUsecaseImpl(i.get())),
         Bind.singleton((i) => GetAllDeliveriesListUsecaseImpl(i.get())),
@@ -45,9 +47,9 @@ class HomeModule extends Module {
         Bind.singleton((i) => DeliveryRepositoryImpl(i.get(), i.get())),
         Bind.singleton((i) => SaveDeliveryUsecaseImpl(i.get(), i.get())),
         Bind.singleton((i) => CorreiosRastreioDatasource(i.get())),
-        Bind.singleton((i) => NotificationService()),
+        Bind.singleton((i) => NotificationService(i.get())),
         Bind.singleton(
-          (i) => HomeBloc(i.get(), i.get(), i.get(), i.get(), i.get()),
+          (i) => HomeBloc(i.get(), i.get(), i.get(), i.get(), i.get(), i.get()),
         ),
         Bind.singleton((i) => FetchJob(i.get(), i.get(), i.get())),
         Bind.singleton((i) => DeliveryBloc(i.get(), i.get())),

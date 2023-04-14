@@ -11,4 +11,6 @@ abstract class DeliveryRepository {
   Future<Either<Failure, List<Delivery>>> getAllDeliveries();
   Future<Either<Failure, Delivery>> saveDelivery(Delivery delivery);
   Future<Either<Failure, Unit>> deleteDelivery(Delivery delivery);
+
+  Future<Either<Failure, Unit>> migrateDatasource();
 }
