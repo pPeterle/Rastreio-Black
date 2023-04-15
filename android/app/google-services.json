@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "62397522984",
+    "project_id": "rastreio-black-app",
+    "storage_bucket": "rastreio-black-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62397522984:android:9e4f7534d94b56cd04c11d",
+        "android_client_info": {
+          "package_name": "com.rastreioblack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62397522984-etellcub6c2m06ifj9tnhacu6tqmid38.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtfV11L-ByPSyBAiG1MniTaCpohm6rn60"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62397522984-etellcub6c2m06ifj9tnhacu6tqmid38.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

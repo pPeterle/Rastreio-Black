@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/errors/errors.dart';
 import 'package:flutter_clean_architeture/modules/home/domain/entities/delivery.dart';
 import 'package:dartz/dartz.dart';
@@ -114,7 +115,8 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
       return const Right(
         unit,
       );
-    } catch (e) {
+    } catch (e, stacktrace) {
+      FirebaseCrashlytics.instance.recordError(e, stacktrace);
       return Left(DataSourceError());
     }
   }
