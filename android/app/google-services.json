@@ -29,6 +29,13 @@
             {
               "client_id": "62397522984-etellcub6c2m06ifj9tnhacu6tqmid38.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "62397522984-v0hj377c70ekhp4jk5p4opfhttgl91a3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rastreioblack"
+              }
             }
           ]
         }
