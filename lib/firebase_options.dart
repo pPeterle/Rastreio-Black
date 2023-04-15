@@ -3,7 +3,6 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -50,32 +49,21 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static final FirebaseOptions android = FirebaseOptions(
-    apiKey:
-        String.fromEnvironment('API_KEY', defaultValue: dotenv.env['API_KEY']!),
-    appId:
-        String.fromEnvironment('APP_ID', defaultValue: dotenv.env['APP_ID']!),
-    messagingSenderId: String.fromEnvironment(
-      'MESSAGING_SENDER_ID',
-      defaultValue: dotenv.env['MESSAGING_SENDER_ID']!,
-    ),
-    projectId: String.fromEnvironment(
-      'PROJECT_ID',
-      defaultValue: dotenv.env['PROJECT_ID']!,
-    ),
-    storageBucket: String.fromEnvironment(
-      'STORAGE_BUCKET',
-      defaultValue: dotenv.env['STORAGE_BUCKET']!,
-    ),
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyDtfV11L-ByPSyBAiG1MniTaCpohm6rn60',
+    appId: '1:62397522984:android:9e4f7534d94b56cd04c11d',
+    messagingSenderId: '62397522984',
+    projectId: 'rastreio-black-app',
+    storageBucket: 'rastreio-black-app.appspot.com',
   );
 
-  static final FirebaseOptions ios = FirebaseOptions(
-    apiKey: dotenv.env['API_KEY']!,
-    appId: dotenv.env['APP_ID']!,
-    messagingSenderId: dotenv.env['MESSAGING_SENDER_ID']!,
-    projectId: dotenv.env['PROJECT_ID']!,
-    storageBucket: dotenv.env['STORAGE_BUCKET']!,
-    iosClientId: dotenv.env['IOS_CLIENT_ID']!,
-    iosBundleId: dotenv.env['IOS_BUNDLE_ID']!,
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyBtOoaW74JQ8_GGIxyjRUw_RYZ6J6EYpNg',
+    appId: '1:62397522984:ios:68eebb3c1beabebc04c11d',
+    messagingSenderId: '62397522984',
+    projectId: 'rastreio-black-app',
+    storageBucket: 'rastreio-black-app.appspot.com',
+    iosClientId: '62397522984-v0hj377c70ekhp4jk5p4opfhttgl91a3.apps.googleusercontent.com',
+    iosBundleId: 'com.rastreioblack',
   );
 }
