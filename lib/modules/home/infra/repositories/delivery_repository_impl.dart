@@ -105,12 +105,13 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
       });
       final updateDeliveries = await Future.wait(updateDeliveriesFuture);
 
-      await Future.wait(
-        updateDeliveries.map((delivery) async {
-          await _localDatasource.saveDeliveryModel(delivery);
-          await _localDatasource.deleteDeliveryModelOutdated(delivery.code);
-        }),
-      );
+      await Future.wait([
+        ...updateDeliveries.map(
+          (delivery) => _localDatasource.saveDeliveryModel(delivery),
+        ),
+        ...deliveries.map((delivery) =>
+            _localDatasource.deleteDeliveryModelOutdated(delivery.code))
+      ]);
 
       return const Right(
         unit,
