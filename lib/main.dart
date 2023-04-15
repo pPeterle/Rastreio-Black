@@ -7,7 +7,6 @@ import 'package:flutter_clean_architeture/app_moduled.dart';
 import 'package:flutter_clean_architeture/app_widget.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +20,6 @@ void main() async {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
-  await dotenv.load(fileName: ".env");
   await Hive.initFlutter();
   runApp(ModularApp(module: AppModule(), child: const MyApp()));
 }
