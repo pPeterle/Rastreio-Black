@@ -98,7 +98,7 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
 
       final updateDeliveriesFuture = deliveries.map((delivery) async {
         final updateDelivery = await _remoteDatasource.trackDelivery(
-          delivery.code,
+          delivery.code.toUpperCase(),
           delivery.deliveryListId,
         );
         return updateDelivery.copyWith(title: delivery.title);
