@@ -205,10 +205,10 @@ packages:
     dependency: "direct main"
     description:
       name: correios_rastreio
-      sha256: d9a63fca3689b00e0b8610046b7b1b5254cfa0a1286b03f969fb98278b6cd873
+      sha256: a166414ed5ba59497bb112affda02d52429168b2d7fd595bc6e2370458423ef4
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.4"
+    version: "3.0.0"
   coverage:
     dependency: transitive
     description:
@@ -221,10 +221,10 @@ packages:
     dependency: transitive
     description:
       name: crypto
-      sha256: aa274aa7774f8964e4f4f38cc994db7b6158dd36e9187aaceaddc994b35c6c67
+      sha256: ff625774173754681d66daaf4a448684fb04b78f902da9cb3d308c19cc5e8bab
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.2"
+    version: "3.0.3"
   csslib:
     dependency: transitive
     description:
@@ -1278,5 +1278,5 @@ packages:
     source: hosted
     version: "3.1.1"
 sdks:
-  dart: ">=2.18.6 <4.0.0"
+  dart: ">=2.19.0 <4.0.0"
   flutter: ">=3.3.10"
